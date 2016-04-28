@@ -2,18 +2,15 @@
 
 public class Sentry {
 	private int[] currentPos; //int[0] is x-coordinate, int[1] is y-coordinate
-	//private boolean hasKey; //This info stored in maze only for now.
+	private int[] currentVision;
+	
+	private int[][] rangeOfPos; //list of coordinates where sentry can go, in adjacent order.
+	private int counter;
 	
 	private void makeMove(){
-		char direction = getUserInput() //'u', 'd', 'l', 'r' (up, down, left, right).
-		newPos = new int {newX(direction), newY(direction)};
-				
-		if (isValid(newPos)){ //false if a wall, true otherwise
-			currentPos = newPos;
-		}
-		else{
-			//do nothing
-		}
+		counter++;
+		currentPos = {/*x*/rangeOfPos[counter], /*y*/rangeOfPos[counter][counter]};
+		updateVision(currentVision);
 	}
 	
 	//Implement above functions...
