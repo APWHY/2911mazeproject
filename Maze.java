@@ -20,5 +20,5 @@ public class Maze {
 	private void generateMaze() {
 		//TO DO
 	}
-	
+	// Edit from Andy
 }
