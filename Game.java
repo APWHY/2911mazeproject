@@ -57,6 +57,7 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		fpsTimer.start();
 		gameWindow.mainFrame.addKeyListener(gameWindow);
 		gameWindow.mainFrame.addMouseListener(gameWindow);
+		gameWindow.mainFrame.setFocusable(true);
 	}
 	public Renderer getRenderer(){
 		return screen;

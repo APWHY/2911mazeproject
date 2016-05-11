@@ -7,40 +7,48 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class Renderer extends JPanel{
 //testing variables -- these won't be in once maze is integrated
-	private int colSet;
-	private final int[][] testMaze = {
-			{ 0,1,0,0,0,0,0,1,1,1 },
-			{ 0,1,0,0,0,0,0,1,1,1 },
-			{ 0,1,0,0,0,0,0,1,1,1 },
-			{ 0,1,0,0,0,0,1,0,0,0 },
-			{ 0,1,0,0,0,1,0,1,0,0 },
-			{ 0,0,1,0,0,0,1,0,0,0 },
-			{ 0,0,1,0,0,0,0,0,0,0 },
-			{ 0,0,1,0,0,0,0,0,0,0 },
-			{ 1,0,1,0,0,1,0,0,0,0 },
-			{ 0,0,1,0,0,0,0,0,0,0 }
-	};
+	private int colSet,colFlag;
+//	private final int[][] testMaze = {
+//			{ 0,1,0,0,0,0,0,1,1,1 },
+//			{ 0,1,0,0,0,0,0,1,1,1 },
+//			{ 0,1,0,0,0,0,0,1,1,1 },
+//			{ 0,1,0,0,0,0,1,0,0,0 },
+//			{ 0,1,0,0,0,1,0,1,0,0 },
+//			{ 0,0,1,0,0,0,1,0,0,0 },
+//			{ 0,0,1,0,0,0,0,0,0,0 },
+//			{ 0,0,1,0,0,0,0,0,0,0 },
+//			{ 1,0,1,0,0,1,0,0,0,0 },
+//			{ 0,0,1,0,0,0,0,0,0,0 },
+//			{ 1,1,1,1,1,1,1,0,1,1 },
+//	};
 	private int ppx, ppy;
+	private Maze maze;
 	
 	//constants and other variables
 	private int WID,HEI,offset;
-	private final int RWID = 68, RHEI = 68;
-
-	
+	private final int RWID = 25, RHEI = 25;
+	private final int MAZESIZE = 25;
+	private static final int EMPTY = 0;
+	private static final int FLOOR = 1;
+	private static final int WALL  = 2;
+	private static final int START = 3;
+	private static final int EXIT  = 4;
 	
 	public Renderer(int width, int height){
 		this.setBackground(Color.BLUE);
 		WID = width;
 		HEI = height;
 		offset = 50;
-		colSet = 100;
+		colSet = 150;
+		colFlag = 1;
 		ppx = WID/2;
 		ppy = HEI/2;
 		this.setVisible(true);
 		this.setFocusable(true);
+		maze = new Maze(MAZESIZE);
 	}
-	private int[][] getMaze(){
-		return testMaze;
+	private Maze getMaze(){
+		return maze;
 	}
 	public int getPX(){
 		return ppx;
@@ -59,20 +67,29 @@ public class Renderer extends JPanel{
 		drawPlayer(g);
 	}
 	private void drawMaze(Graphics g){
-		int [][] maze = getMaze();
-		for(int m = 0; m < maze.length; m++){
-			for(int n = 0;n <  maze[0].length; n++){
-				if (maze[m][n] == 0){
+		Maze maze = getMaze();
+		for(int m = 0; m < maze.getSize(); m++){
+			for(int n = 0;n <  maze.getSize(); n++){
+				if (maze.getOne(m, n).getType() == FLOOR){//pink
 					g.setColor(new Color(1*(colSet),0,1*(colSet)));
-				}else{
-					g.setColor(new Color(1*(colSet),1*(colSet),0));
+				}else if (maze.getOne(m, n).getType() == START){//red
+					g.setColor(new Color(1*(colSet),25,25));
+				}else if (maze.getOne(m, n).getType() == WALL){//blue
+					g.setColor(new Color(25,25,1*(colSet)));
+				}else if (maze.getOne(m, n).getType() == EXIT){//cyan
+					g.setColor(new Color(25,1*(colSet),1*(colSet)));
+				}else if (maze.getOne(m, n).getType() == EMPTY){//grey
+					g.setColor(new Color(1*(colSet),1*(colSet),1*(colSet)));
 				}
 				g.fillRect(offset+n*(RWID+1), offset+m*(RHEI+1), RWID,RHEI);
 			}
 		}
-		colSet++;
-		if (colSet > 255){
-			colSet = 0;
+		colSet= colSet + colFlag;
+		if (colSet > 200){
+			colFlag = -1;
+		}
+		if (colSet < 150){
+			colFlag = 1;
 		}
 	}
 	
