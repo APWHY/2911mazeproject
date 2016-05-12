@@ -7,15 +7,15 @@ public class Tile {
 	private static final int START = 3;
 	private static final int EXIT  = 4;
 	
-	int row;
-	int col;
-	Tile prev;
-	int type;
+	private int row;
+	private int col;
+	private Tile prev;
+	private int type;
 	
 	public Tile(int horz,int vert){
 		row = horz;
 		col = vert;
-		prev = null;
+		prev = null;//this is actually useless -- probably should get rid of it. Can be used for pathfinding but will almost always give a shitty path
 		type = EMPTY;
 		
 	}

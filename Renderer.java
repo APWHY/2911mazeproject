@@ -26,8 +26,8 @@ public class Renderer extends JPanel{
 	
 	//constants and other variables
 	private int WID,HEI,offset;
-	private final int RWID = 25, RHEI = 25;
-	private final int MAZESIZE = 25;
+	private final int RWID = 22, RHEI = 22;
+	private final int MAZESIZE = 30;
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
 	private static final int WALL  = 2;
@@ -70,16 +70,16 @@ public class Renderer extends JPanel{
 		Maze maze = getMaze();
 		for(int m = 0; m < maze.getSize(); m++){
 			for(int n = 0;n <  maze.getSize(); n++){
-				if (maze.getOne(m, n).getType() == FLOOR){//pink
-					g.setColor(new Color(1*(colSet),0,1*(colSet)));
+				if (maze.getOne(m, n).getType() == FLOOR){//grey			
+					g.setColor(new Color(1*(colSet),1*(colSet),1*(colSet)));
 				}else if (maze.getOne(m, n).getType() == START){//red
 					g.setColor(new Color(1*(colSet),25,25));
 				}else if (maze.getOne(m, n).getType() == WALL){//blue
 					g.setColor(new Color(25,25,1*(colSet)));
 				}else if (maze.getOne(m, n).getType() == EXIT){//cyan
 					g.setColor(new Color(25,1*(colSet),1*(colSet)));
-				}else if (maze.getOne(m, n).getType() == EMPTY){//grey
-					g.setColor(new Color(1*(colSet),1*(colSet),1*(colSet)));
+				}else if (maze.getOne(m, n).getType() == EMPTY){//pink
+					g.setColor(new Color(1*(colSet),0,1*(colSet)));
 				}
 				g.fillRect(offset+n*(RWID+1), offset+m*(RHEI+1), RWID,RHEI);
 			}
