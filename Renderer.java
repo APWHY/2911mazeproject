@@ -23,6 +23,7 @@ public class Renderer extends JPanel{
 //	};
 	private int ppx, ppy;
 	private Maze maze;
+	public User user;
 	
 	//constants and other variables
 	private int WID,HEI,offset;
@@ -38,7 +39,7 @@ public class Renderer extends JPanel{
 		this.setBackground(Color.BLUE);
 		WID = width;
 		HEI = height;
-		offset = 50;
+		offset = 50; //MAKE CAPITALS? -Irfan.
 		colSet = 150;
 		colFlag = 1;
 		ppx = WID/2;
@@ -46,6 +47,7 @@ public class Renderer extends JPanel{
 		this.setVisible(true);
 		this.setFocusable(true);
 		maze = new Maze(MAZESIZE);
+		user = new User(this.maze, RWID, RHEI, WID, HEI, offset); //Irfan
 	}
 	private Maze getMaze(){
 		return maze;
@@ -81,7 +83,8 @@ public class Renderer extends JPanel{
 				}else if (maze.getOne(m, n).getType() == EMPTY){//pink
 					g.setColor(new Color(1*(colSet),0,1*(colSet)));
 				}
-				g.fillRect(offset+n*(RWID+1), offset+m*(RHEI+1), RWID,RHEI);
+				//g.fillRect(offset+n*(RWID+1), offset+m*(RHEI+1), RWID,RHEI);
+				g.fillRect(offset+n*(RWID), offset+m*(RHEI), RWID,RHEI); //IRfan
 			}
 		}
 		colSet= colSet + colFlag;
@@ -93,11 +96,9 @@ public class Renderer extends JPanel{
 		}
 	}
 	
+	//Edited by Irfan
 	private void drawPlayer(Graphics g){
-		g.setColor(Color.DARK_GRAY);
-		g.fillOval(getPX(), getPY(), RWID/2, RHEI/2);
-		
-		
+		this.user.drawPlayer(g);
 	}
 	
 	@Override
