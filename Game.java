@@ -66,19 +66,25 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	public void keyTyped(KeyEvent e) {	
 
 	}
+	
+	//Edited by Irfan.
 	@Override
 	public void keyPressed(KeyEvent e) {	//useful
 		if(e.getKeyCode() == KeyEvent.VK_UP){
 			up = 1;
+			this.screen.user.up();
 		}
 		if(e.getKeyCode() == KeyEvent.VK_DOWN){
 			down = 1;
+			this.screen.user.down();
 		}
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
 			right = 1;
+			this.screen.user.right();
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT){
 			left = 1;
+			this.screen.user.left();
 		}
 	}
 	@Override
