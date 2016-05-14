@@ -15,9 +15,10 @@ public class Maze {
 	private static final int SENTRY  = 5;	
 	
 	private static final float CYCLECHANCE = (float) 0.75;
+	private static final int numSen = 3; // Numbers of sentry - Andy
 
 	private Tile[][] maze;
-//	private ArrayList<Sentry> sentries;
+	private ArrayList<Sentry> sentries;
 	private boolean keyStatus;
 	private int size;
 
@@ -32,8 +33,24 @@ public class Maze {
 			}
 			generateMaze(size); //should check quality of maze (no. of empty squares?) and regenerate if it sucks
 		}while(!goodMaze());
-		
+		addSentries(numSen, maze); // Adding sentries - Andy
 		keyStatus = false;
+	}
+	
+	// Adding sentries function - Andy
+	public void addSentries(int num, Tile[][] maze) {
+		while(num > 0) {
+			Random x = new Random();
+			Random y = new Random();
+			int r = x.nextInt(size);
+			int c = y.nextInt(size);
+			if(this.getOne(r, c).getType() == WALL) {
+				this.getOne(r, c).setType(SENTRY);
+				Sentry s = new Sentry(r, c);
+				sentries.add(s);
+				num--;
+			}
+		}
 	}
 	
 	// add timer
