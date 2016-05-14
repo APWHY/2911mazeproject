@@ -14,5 +14,18 @@ public class Sentry {
 	}
 	
 	//Implement above functions...
+	//Sentry constructor, getRow, getColumn by Andy
+	public Sentry(int row, int column) {
+		this.int[0] = row;
+		this.int[1] = column;
+	}
+	
+	public int getRow() {
+		return this.int[0];
+	}
+	
+	public int getColumn() {
+		return this.int[1];
+	}
 	
 }
