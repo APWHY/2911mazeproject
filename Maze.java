@@ -22,6 +22,8 @@ public class Maze {
 	private boolean keyStatus;
 	private int size;
 
+	public Tile start; //Irfan
+	
 	public Maze(int size){
 		this.size = size;
 		maze = new Tile[size][size];
@@ -59,7 +61,7 @@ public class Maze {
 
 
 		Random rand = new Random();
-		Tile start = new Tile(rand.nextInt(size),rand.nextInt(size));//randomly pick a starting position
+		start = new Tile(rand.nextInt(size),rand.nextInt(size));//randomly pick a starting position
 		start.setType(START);
 		maze[start.getRow()][start.getCol()] = start;
 		LinkedList<Tile> ends = new LinkedList<Tile>(); //this holds the number of paths that haven't been closed off
@@ -211,6 +213,11 @@ public class Maze {
 
 	public Tile getOne(int row, int col){
 		return maze[row][col];
+	}
+	
+	//Irfan -renamed function for User.java
+	public int tileType(int row, int col){
+		return maze[row][col].getType();
 	}
 	
 	
