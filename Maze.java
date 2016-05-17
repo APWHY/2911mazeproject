@@ -15,7 +15,7 @@ public class Maze {
 	private static final int SENTRY  = 5;	
 	
 	private static final float CYCLECHANCE = (float) 0.75;
-	private static final int numSen = 3; // Numbers of sentries - Andy
+	private static final int NUMSEN = 3; // Numbers of sentries - Andy
 
 	private Tile[][] maze;
 	private ArrayList<Sentry> sentries;
@@ -27,6 +27,7 @@ public class Maze {
 	public Maze(int size){
 		this.size = size;
 		maze = new Tile[size][size];
+		sentries = new ArrayList<Sentry>();
 		do{
 			for (int n = 0; n < size; n++){
 				for (int m = 0; m < size; m++){
@@ -35,7 +36,7 @@ public class Maze {
 			}
 			generateMaze(size); //should check quality of maze (no. of empty squares?) and regenerate if it sucks
 		}while(!goodMaze());
-		addSentries(numSen, maze); // Adding sentries to the maze - Andy
+		addSentries(NUMSEN, maze); // Adding sentries to the maze - Andy
 		keyStatus = false;
 	}
 	
@@ -47,7 +48,7 @@ public class Maze {
 			int r = x.nextInt(size);
 			int c = y.nextInt(size);
 			if(this.getOne(r, c).getType() == WALL) {
-				this.getOne(r, c).setType(SENTRY);
+				//this.getOne(r, c).setType(SENTRY); we don't need to set the type to sentry since they act as walls
 				Sentry s = new Sentry(r, c);
 				sentries.add(s);
 				num--;
@@ -57,13 +58,17 @@ public class Maze {
 	
 	// add timer
 	
+	public ArrayList<Sentry> getSentries() {
+		return sentries;
+	}
+
 	private void generateMaze(int size) {//generates maze using random walk (at least that's what I think I'm doing)
 
 
 		Random rand = new Random();
 		start = new Tile(rand.nextInt(size),rand.nextInt(size));//randomly pick a starting position
 		start.setType(START);
-		maze[start.getRow()][start.getCol()] = start;
+		maze[start.getCol()][start.getRow()] = start;
 		LinkedList<Tile> ends = new LinkedList<Tile>(); //this holds the number of paths that haven't been closed off
 		LinkedList<Tile> choices = new LinkedList<Tile>();//holds the number of possible tiles that can be traveled to from the current one
 		ends.add(start);//adds our starting position to the ends list
@@ -154,7 +159,7 @@ public class Maze {
 			}
 
 		}
-		System.out.println(count);
+//		System.out.println(count);
 		if(count > 15){
 			return false;
 		}else{
@@ -163,44 +168,44 @@ public class Maze {
 	}
 	
 	
-	private Tile getN(Tile tile){
+	public Tile getN(Tile tile){
 		if(tile.getRow() > 0){
-			return maze[tile.getRow()-1][tile.getCol()];
+			return maze[tile.getCol()][tile.getRow()-1];
 		}else{
 			return null;
 		}
 	}
-	private Tile getS(Tile tile){
+	public Tile getS(Tile tile){
 		if(tile.getRow() < size-1){
-			return maze[tile.getRow()+1][tile.getCol()];
+			return maze[tile.getCol()][tile.getRow()+1];
 		}else{
 			return null;
 		}
 	}
-	private Tile getE(Tile tile){
+	public Tile getE(Tile tile){
 		if(tile.getCol() < size-1){
-			return maze[tile.getRow()][tile.getCol()+1];
+			return maze[tile.getCol()+1][tile.getRow()];
 		}else{
 			return null;
 		}
 	}
-	private Tile getW(Tile tile){
+	public Tile getW(Tile tile){
 		if(tile.getCol() > 0){
-			return maze[tile.getRow()][tile.getCol()-1];
+			return maze[tile.getCol()-1][tile.getRow()];
 		}else{
 			return null;
 		}
 	}
-	private Tile getNW(Tile tile){
+	public Tile getNW(Tile tile){
 		return getW(getN(tile));
 	}
-	private Tile getNE(Tile tile){
+	public Tile getNE(Tile tile){
 		return getE(getN(tile));
 	}
-	private Tile getSW(Tile tile){
+	public Tile getSW(Tile tile){
 		return getW(getS(tile));
 	}
-	private Tile getSE(Tile tile){
+	public Tile getSE(Tile tile){
 		return getE(getS(tile));
 	}
 	public boolean isKeyStatus() {
@@ -212,12 +217,12 @@ public class Maze {
 	}
 
 	public Tile getOne(int row, int col){
-		return maze[row][col];
+		return maze[col][row];
 	}
 	
 	//Irfan -renamed function for User.java
 	public int tileType(int row, int col){
-		return maze[row][col].getType();
+		return maze[col][row].getType();
 	}
 	
 	

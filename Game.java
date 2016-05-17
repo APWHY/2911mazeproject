@@ -9,8 +9,7 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	
 	private JFrame mainFrame;
 	private Renderer screen;
-	private int up,down,left,right;
-	private final int SPEED = 5; //this is temporary physics should be handled by player class
+	private int vert, horz;
 
 	//PUT THE MAZE AND PLAYER IN RENDERER
 	
@@ -23,7 +22,7 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	}
 	private void startWindow(){
 		//display = new Display Menu();
-		up = down = left = right = 0;
+		vert = horz = 0;
 		mainFrame = new JFrame("wow look at this");
 		mainFrame.setSize(WWID,WHEI);//since we have pack the size shouldn't matter 
 		mainFrame.setResizable(false);
@@ -38,8 +37,7 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		
 	}
 	public void actionPerformed(ActionEvent e){
-		screen.setPX((right-left)*SPEED);
-		screen.setPY((down-up)*SPEED);
+		screen.movePlayer(vert, horz);
 		if(screen.getPY() > 700){
 			screen.setVisible(false);
 		}else{
@@ -71,35 +69,31 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {	//useful
 		if(e.getKeyCode() == KeyEvent.VK_UP){
-			up = 1;
-			this.screen.user.up();
+			vert = 1;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_DOWN){
-			down = 1;
-			this.screen.user.down();
+			vert = -1;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-			right = 1;
-			this.screen.user.right();
+			horz = -1;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT){
-			left = 1;
-			this.screen.user.left();
+			horz = 1;
 		}
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {	
 		if(e.getKeyCode() == KeyEvent.VK_UP){
-			up = 0;
+			vert = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_DOWN){
-			down = 0;
+			vert = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-			right = 0;
+			horz = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT){
-			left = 0;
+			horz = 0;
 		}
 	}
 	@Override

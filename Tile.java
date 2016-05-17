@@ -13,8 +13,8 @@ public class Tile {
 	private int type;
 	
 	public Tile(int horz,int vert){
-		row = horz;
-		col = vert;
+		col = horz;
+		row = vert;
 		prev = null;//this is actually useless -- probably should get rid of it. Can be used for pathfinding but will almost always give a shitty path
 		type = EMPTY;
 		

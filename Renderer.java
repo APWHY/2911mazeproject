@@ -23,11 +23,11 @@ public class Renderer extends JPanel{
 //	};
 	private int ppx, ppy;
 	private Maze maze;
-	public User user;
+	public Player player;
 	
 	//constants and other variables
 	private int WID,HEI,offset;
-	private final int RWID = 22, RHEI = 22;
+	private final int RWID = 24, RHEI = 24;//make this divisible by 4
 	private final int MAZESIZE = 30;
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
@@ -47,10 +47,15 @@ public class Renderer extends JPanel{
 		this.setVisible(true);
 		this.setFocusable(true);
 		maze = new Maze(MAZESIZE);
-		user = new User(this.maze, RWID, RHEI, WID, HEI, offset); //Irfan
+		player = new Player(this.maze, RWID, RHEI); //Irfan
+		//Tom -- we don't pass offset because we just add offset to the player coordinates -- it's not relevant to the player
+		//we also don't need framewidth and frameheight for the same reasons
 	}
 	private Maze getMaze(){
 		return maze;
+	}
+	public void movePlayer(int vert, int horz){
+		maze = player.move(vert,horz,maze);
 	}
 	public int getPX(){
 		return ppx;
@@ -66,7 +71,9 @@ public class Renderer extends JPanel{
 	}
 	private void drawFrame(Graphics g){
 		drawMaze(g);
+		drawSentries(g);
 		drawPlayer(g);
+
 	}
 	private void drawMaze(Graphics g){
 		Maze maze = getMaze();
@@ -97,10 +104,22 @@ public class Renderer extends JPanel{
 	}
 	
 	//Edited by Irfan
-	private void drawPlayer(Graphics g){
-		this.user.drawPlayer(g);
+	private void drawPlayer(Graphics g){//it's more OOP for this function to be in renderer
+		g.setColor(Color.YELLOW);
+		//Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
+		g.fillOval(player.getxPos()+offset-(player.getUserRad()), player.getyPos()+offset-(player.getUserRad()), player.getUserRad()*2, player.getUserRad()*2);
+
+		//original one
+		//g.fillOval(player.getxPos()+offset, player.getyPos()+offset, player.getUserRad(), player.getUserRad());
+
 	}
-	
+	private void drawSentries(Graphics g){
+		for(Sentry sentry: maze.getSentries()){
+			g.setColor(new Color(20,20,20));
+			g.fillOval(offset+sentry.getColumn()*(RWID), offset+sentry.getRow()*(RHEI), RWID,RHEI);
+			
+		}
+	}
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
