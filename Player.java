@@ -91,8 +91,9 @@ public class Player{
 						playerSent = -90;
 					}
 				}else{
-					playerSent = (float)Math.toDegrees(Math.atan((yPos-sentLocY)/(sentLocX-xPos)));
+					playerSent = (float)Math.toDegrees(Math.atan((float)(yPos-sentLocY)/(sentLocX-xPos)));
 				}
+
 				if(xPos-sentLocX < 0){//works around tan only doing -90 to 90
 				playerSent += 180;
 				}
