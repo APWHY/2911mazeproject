@@ -9,20 +9,20 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	
 	private JFrame mainFrame;
 	private Renderer screen;
-	private int vert, horz;
+	private int vert, horz,tick;
 
 	//PUT THE MAZE AND PLAYER IN RENDERER
 	
-	private final int WWID = 800;//window width and height
-	private final int WHEI = 800;
+	private final int WWID = 900;//window width and height
+	private final int WHEI = 900;
 	private final int FPS = 1000/60;
-	
+	private final int TICKRATE = 60; //number of frames for one second
 	public Game() {
 		startWindow();
 	}
 	private void startWindow(){
 		//display = new Display Menu();
-		vert = horz = 0;
+		vert = horz = tick = 0;
 		mainFrame = new JFrame("wow look at this");
 		mainFrame.setSize(WWID,WHEI);//since we have pack the size shouldn't matter 
 		mainFrame.setResizable(false);
@@ -37,12 +37,8 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		
 	}
 	public void actionPerformed(ActionEvent e){
-		screen.movePlayer(vert, horz);
-		if(screen.getPY() > 700){
-			screen.setVisible(false);
-		}else{
-			screen.setVisible(true);
-		}
+		tick = tick++ % TICKRATE;
+		screen.updateGame(vert,horz,tick);
 		mainFrame.getContentPane().repaint();	
 	}
 	

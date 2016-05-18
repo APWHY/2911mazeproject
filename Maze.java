@@ -15,14 +15,14 @@ public class Maze {
 	private static final int SENTRY  = 5;	
 	
 	private static final float CYCLECHANCE = (float) 0.75;
-	private static final int NUMSEN = 3; // Numbers of sentries - Andy
-
+	private static final int NUMSEN = 15; // Numbers of sentries - Andy
+	private static final int SENTRYSPACE = 3; //space between sentries
 	private Tile[][] maze;
 	private ArrayList<Sentry> sentries;
 	private boolean keyStatus;
 	private int size;
 
-	public Tile start; //Irfan
+
 	
 	public Maze(int size){
 		this.size = size;
@@ -42,14 +42,29 @@ public class Maze {
 	
 	//Adding sentries function - Andy
 	public void addSentries(int num, Tile[][] maze) {
+		Random x = new Random();
+		Random y = new Random();
+		int r = 0;
+		int c = 0;
+		ArrayList<Tile> avoid = new ArrayList<Tile>();
+		boolean tooClose = false;
 		while(num > 0) {
-			Random x = new Random();
-			Random y = new Random();
-			int r = x.nextInt(size);
-			int c = y.nextInt(size);
-			if(this.getOne(r, c).getType() == WALL) {
+			r = x.nextInt(size);
+			c = y.nextInt(size);
+			tooClose = false;
+			for(Sentry sentry: sentries ){
+				avoid.add(getOne(sentry.getColumn(),sentry.getRow()));
+			}
+			avoid.add(getOneType(EXIT));
+			avoid.add(getOneType(START));
+			for(Tile tile: avoid){
+				if(Math.sqrt(Math.pow(tile.getRow()-r,2) + Math.pow(tile.getCol()-c,2)) < SENTRYSPACE){
+					tooClose = true;
+				}
+			}
+			if(this.getOne(c, r).getType() == WALL && tooClose == false) {
 				//this.getOne(r, c).setType(SENTRY); we don't need to set the type to sentry since they act as walls
-				Sentry s = new Sentry(r, c);
+				Sentry s = new Sentry(c, r);
 				sentries.add(s);
 				num--;
 			}
@@ -57,7 +72,11 @@ public class Maze {
 	}
 	
 	// add timer
-	
+	public void updateMaze(){
+		for (Sentry sentry: sentries){
+			sentry.updateDegree();
+		}
+	}
 	public ArrayList<Sentry> getSentries() {
 		return sentries;
 	}
@@ -66,7 +85,7 @@ public class Maze {
 
 
 		Random rand = new Random();
-		start = new Tile(rand.nextInt(size),rand.nextInt(size));//randomly pick a starting position
+		Tile start = new Tile(rand.nextInt(size),rand.nextInt(size));//randomly pick a starting position
 		start.setType(START);
 		maze[start.getCol()][start.getRow()] = start;
 		LinkedList<Tile> ends = new LinkedList<Tile>(); //this holds the number of paths that haven't been closed off
@@ -216,8 +235,16 @@ public class Maze {
 		return size;
 	}
 
-	public Tile getOne(int row, int col){
+	public Tile getOne(int col, int row){
 		return maze[col][row];
+	}
+	public Tile getOneType(int type){//given a type (hopefully unique like start or end or key) will return first found instance of that type
+		for(int n = 0;n < size;n++){
+			for(int m = 0;m < size;m++){
+				if(maze[n][m].getType() == type)return maze[n][m];
+			}
+		}
+		return null;
 	}
 	
 	//Irfan -renamed function for User.java
