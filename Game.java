@@ -6,21 +6,27 @@ import java.awt.event.*;
 
 public class Game implements ActionListener, MouseListener, KeyListener{
 	
-	
 	private JFrame mainFrame;
 	private Renderer screen;
-	private int up,down,left,right;
-	private final int SPEED = 5; //this is temporary physics should be handled by player class
+	private int up,down,left,right; // check if this is okay design wise
+	private final int SPEED = 5; // this is temporary physics should be handled by player class
 
-	//PUT THE MAZE AND PLAYER IN RENDERER
+	// PUT THE MAZE AND PLAYER IN RENDERER
 	
-	private final int WWID = 800;//window width and height
+	private final int WWID = 800; // window width and height
 	private final int WHEI = 800;
 	private final int FPS = 1000/60;
 	
+	/**
+	* Game constructor that creates the gamewindow.
+	*/
 	public Game() {
 		startWindow();
 	}
+	
+	/**
+	* Creates the window containing the game.
+	*/
 	private void startWindow(){
 		//display = new Display Menu();
 		up = down = left = right = 0;
@@ -37,6 +43,12 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		mainFrame.getContentPane().add(screen);
 		
 	}
+	
+	/** 
+	* 
+	* 
+	* @param ActionEvent 
+	*/
 	public void actionPerformed(ActionEvent e){
 		screen.setPX((right-left)*SPEED);
 		screen.setPY((down-up)*SPEED);
@@ -48,6 +60,9 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		mainFrame.getContentPane().repaint();	
 	}
 	
+	/**
+	* Main function, creates the game window.
+	*/
 	public static void main(String[] args){
 		Game gameWindow = new Game();
 		//System.out.println(gameWindow.mainFrame.getComponent(1));
@@ -59,14 +74,31 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		gameWindow.mainFrame.addMouseListener(gameWindow);
 		gameWindow.mainFrame.setFocusable(true);
 	}
+	
+	/**
+	* Get the game's renderer.
+	*
+	* @return Game object's renderer.
+	*/
 	public Renderer getRenderer(){
 		return screen;
 	}
+	
+	/**
+	* 
+	* 
+	* 
+	*/
 	@Override
 	public void keyTyped(KeyEvent e) {	
 
 	}
 	
+	/**
+	*
+	*
+	* @param
+	*/
 	//Edited by Irfan.
 	@Override
 	public void keyPressed(KeyEvent e) {	//useful
@@ -87,6 +119,10 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 			this.screen.user.left();
 		}
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void keyReleased(KeyEvent e) {	
 		if(e.getKeyCode() == KeyEvent.VK_UP){
@@ -102,21 +138,40 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 			left = 0;
 		}
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void mouseClicked(MouseEvent e) {	//useful
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void mousePressed(MouseEvent e) {	
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void mouseReleased(MouseEvent e) {	
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void mouseEntered(MouseEvent e) {	
 	}
+	
+	/**
+	*
+	*/
 	@Override
 	public void mouseExited(MouseEvent e) {	
 	}
-	
 
 }
