@@ -4,7 +4,6 @@ package mazeGUI;
 import java.util.Random;
 
 public class Sentry {
-
 	private int row; 
 	private int col;
 	private int degree;

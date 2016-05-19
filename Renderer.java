@@ -9,22 +9,9 @@ import java.awt.image.BufferedImage;
 public class Renderer extends JPanel{
 //testing variables -- these won't be in once maze is integrated
 	private int colSet,colFlag;
-//	private final int[][] testMaze = {
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,1,0,0,0 },
-//			{ 0,1,0,0,0,1,0,1,0,0 },
-//			{ 0,0,1,0,0,0,1,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 1,0,1,0,0,1,0,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 1,1,1,1,1,1,1,0,1,1 },
-//	};
-	private int ppx, ppy; // what 
+	private int ppx, ppy;
 	private Maze maze;
-	public Player player;
+	private Player player;
 	BufferedImage canvas;
 	//constants and other variables
 	private int WID,HEI,offset;
@@ -38,11 +25,6 @@ public class Renderer extends JPanel{
 	private final int ARCDIST = (int)(RWID*1.3);
 	private final int ARCWIDTH = 45;
 	
-	/**
-	* Constructor. 
-	*
-	* Renderer draws the game panel on the game window.
-	*/
 	public Renderer(int width, int height){
 		this.setBackground(Color.GREEN);
 		WID = width;
@@ -60,53 +42,26 @@ public class Renderer extends JPanel{
 		//Tom -- we don't pass offset because we just add offset to the player coordinates -- it's not relevant to the player
 		//we also don't need framewidth and frameheight for the same reasons
 	}
-	
-	/**
-	* Get the Renderer's maze.
-	* 
-	* @return This Renderer's maze.
-	*/
 	private Maze getMaze(){
 		return maze;
 	}
-
 	public void updateGame(int vert, int horz, int tick){
 		maze.updateMaze();
 		maze = player.move(vert,horz,maze);
 		
 	}
-	
-	/**
-	* 
-	*/
 	public int getPX(){
 		return ppx;
 	}
-	
-	/**
-	*
-	*/
 	public int getPY(){
 		return ppy;
 	}
-	
-	/**
-	*
-	*/
 	public void setPX(int n){
 		ppx += n;
 	}
-	
-	/**
-	*
-	*/
 	public void setPY(int n){
 		ppy += n;
 	}
-	
-	/**
-	*
-	*/
 	private void drawFrame(Graphics g){
 		Graphics cg = canvas.getGraphics();
 		drawMaze(cg);
@@ -115,10 +70,6 @@ public class Renderer extends JPanel{
 		g.drawImage(canvas, offset, offset, null);
 
 	}
-	
-	/**
-	*
-	*/
 	private void drawMaze(Graphics g){
 		Maze maze = getMaze();
 		for(int m = 0; m < maze.getSize(); m++){
@@ -171,10 +122,6 @@ public class Renderer extends JPanel{
 			}
 		}
 	}
-	
-	/**
-	*
-	*/
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);

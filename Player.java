@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 public class Player{
-
 	private final int SPEED = 1;
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;

@@ -6,7 +6,6 @@ import java.util.Random;
 //use bytes instead of ints?
 
 public class Maze {
-
 	//Tile status definitions
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
@@ -25,15 +24,10 @@ public class Maze {
 
 
 	
-	/**
-	* Constructor, creates a new Maze class.
-	*/
 	public Maze(int size){
-		
 		this.size = size;
 		maze = new Tile[size][size];
 		sentries = new ArrayList<Sentry>();
-
 		do{
 			for (int n = 0; n < size; n++){
 				for (int m = 0; m < size; m++){
@@ -42,18 +36,11 @@ public class Maze {
 			}
 			generateMaze(size); //should check quality of maze (no. of empty squares?) and regenerate if it sucks
 		}while(!goodMaze());
-
 		addSentries(NUMSEN, maze); // Adding sentries to the maze - Andy
 		keyStatus = false;
 	}
 	
 	//Adding sentries function - Andy
-	/**
-	* 
-	* 
-	* @param num Number of Sentries to be inserted.
-	* @param maze 2d array of Tiles 
-	*/
 	public void addSentries(int num, Tile[][] maze) {
 		Random x = new Random();
 		Random y = new Random();
@@ -85,7 +72,6 @@ public class Maze {
 	}
 	
 	// add timer
-
 	public void updateMaze(){
 		for (Sentry sentry: sentries){
 			sentry.updateDegree();
@@ -107,37 +93,27 @@ public class Maze {
 		ends.add(start);//adds our starting position to the ends list
 		int branches = 0;
 		int temp = 0;
-		Tile cur = null
-		Tile process = null;
-		
-		while (!ends.isEmpty()){ // While there are still available paths
-		
-			cur = ends.remove(); // Take an unfinished path off the Queue || Examine the next unfinished path
-			
-			if (this.getN(cur)!= null){//and add cells that are adjacent to it and have yet to be discovered to the choices list
-				if(this.getN(cur).getType() == EMPTY) choices.add(getN(cur)); // why not and the two ifs
-			} 
-			
-			if (this.getS(cur)!= null){
-				if(this.getS(cur).getType() == EMPTY) choices.add(getS(cur));
+		Tile cur = null,process = null;
+		while(!ends.isEmpty()){//so while we still have some paths that haven't been closed off
+			cur = ends.remove();//take an unfinished path off the queue
+			if(getN(cur)!= null){//and add cells that are adjacent to it and have yet to be discovered to the choices list
+				if(getN(cur).getType() == EMPTY) choices.add(getN(cur));
+			}
+			if(getS(cur)!= null){
+				if(getS(cur).getType() == EMPTY) choices.add(getS(cur));
+			}
+			if(getE(cur)!= null){
+				if(getE(cur).getType() == EMPTY) choices.add(getE(cur));
+			}
+			if(getW(cur)!= null){
+				if(getW(cur).getType() == EMPTY) choices.add(getW(cur));
 			}
 
-			if (this.getE(cur)!= null){
-				if(this.getE(cur).getType() == EMPTY) choices.add(getE(cur));
-			}
-			
-			if (this.getW(cur)!= null){
-				if(this.getW(cur).getType() == EMPTY) choices.add(getW(cur));
-			}
-
-			if (!choices.isEmpty()){ // If there are Tiles to choose from
-			
+			if(!choices.isEmpty()){		//if there are some tiles to choose from ----	
 	//there are two options here. The long line means that sometimes the maze will not extend an end even if the option exists
 	//the large commented out section means that if an option exists at least one will be taken. It provides more complete mazes but 
 	//the mazes don't look as nice and become bloody hard
-			
-			    //pick a number from 0 to the number of choices, skewed towards 0 by taking the uniform distribution to the power of 1.5
-				//
+				//pick a number from 0 to the number of choices, skewed towards 0 by taking the uniform distribution to the power of 1.5
 				branches = (int)Math.round(Math.sqrt(rand.nextFloat()*rand.nextFloat()*rand.nextFloat()))*(choices.size()-1);
 				
 //				if (choices.size() == 1){//picks a number from 1 to the number of choices uniformly or skewed
@@ -148,50 +124,39 @@ public class Maze {
 //				}
 				
 				//branches is the number of possible options that WILL be explored (so usually not all available options are explored)
-				while (branches >= 0 && !choices.isEmpty()){ // For each explorable branch || for each remaining branch provided for, we
-					
-					if (choices.size() == 1){ // Choode a random branch || pick one of the choices randomly
+				while (branches >= 0 && !choices.isEmpty()){ //for each remaining branch provided for, we
+					if (choices.size() == 1){//pick one of the choices randomly
 						temp = 0;
-					} else {
+					}else{
 						temp = Math.round(rand.nextFloat())*(choices.size()-1);
 					}
-					
-					process = choices.remove(temp); // Remove the next Tile on the chosen branch || take it off the choices list
+					process = choices.remove(temp);//take it off the choices list
 					process.setPrev(cur);//THIS LINE IS USELESS IM GOING TO REMOVE IT SOME TIME
 					
-					// the next bit of code will block the chance of cycles being discovered if they exist
+					//the next bit of code will block the chance of cycles being discovered if they exist
 					//you actually want some cycles, so CYCLECHANCE can be adjusted to change the chance we ignore the potential for a cycle
-					
-					// Adjusts the number of cycles appearing in the maze
-					if (rand.nextFloat() > CYCLECHANCE && getN(process)!= null && getN(process) != cur && getN(process).getType() == FLOOR){
-						process.setType(WALL);
-					} else if (rand.nextFloat() > CYCLECHANCE && getS(process)!= null && getS(process) != cur && getS(process).getType() == FLOOR){
-						process.setType(WALL);
-					} else if (rand.nextFloat() > CYCLECHANCE && getW(process)!= null && getW(process) != cur && getW(process).getType() == FLOOR){
-						process.setType(WALL);
-					} else if (rand.nextFloat() > CYCLECHANCE && getE(process)!= null && getE(process) != cur && getE(process).getType() == FLOOR){
-					    process.setType(WALL);
-					} else {
+					if (rand.nextFloat() > CYCLECHANCE && getN(process)!= null && getN(process) != cur && getN(process).getType() == FLOOR)process.setType(WALL);
+					else if (rand.nextFloat() > CYCLECHANCE && getS(process)!= null && getS(process) != cur && getS(process).getType() == FLOOR)process.setType(WALL);
+					else if (rand.nextFloat() > CYCLECHANCE && getW(process)!= null && getW(process) != cur && getW(process).getType() == FLOOR)process.setType(WALL);
+					else if (rand.nextFloat() > CYCLECHANCE && getE(process)!= null && getE(process) != cur && getE(process).getType() == FLOOR)process.setType(WALL);
+					else{
 						process.setType(FLOOR);		//set it to floor if it passes the cycle test(or the test just gets ignored)
 						ends.add(process);//add it to the list of unfinished paths
 					}
 
-					branches--;//reduces the number of branches provided for
+					branches--;//reduces the number of br anches provided for
 				}
-				
 				while (choices.size() > 0){//after all the branches have been accounted for, any remaining choices get turned into walls
 					process = choices.remove();
 					process.setType(WALL);
 				}
-				
 				if (getN(cur) != null && getN(cur).getType() == FLOOR){//these finish off diagonal walling logic for 2,3 or 4 way forks.
-					if(getW(cur) != null &&getW(cur).getType() == FLOOR) getNW(cur).setType(WALL);//needed because these are essentially corners
-					if(getE(cur) != null &&getE(cur).getType() == FLOOR) getNE(cur).setType(WALL);
+					if(getW(cur) != null &&getW(cur).getType() == FLOOR && getNW(cur).getType()!=FLOOR) getNW(cur).setType(WALL);//needed because these are essentially corners
+					if(getE(cur) != null &&getE(cur).getType() == FLOOR && getNE(cur).getType()!=FLOOR) getNE(cur).setType(WALL);
 				}
-				
 				if (getS(cur) != null && getS(cur).getType() == FLOOR){
-					if(getW(cur) != null &&getW(cur).getType() == FLOOR) getSW(cur).setType(WALL);
-					if(getE(cur) != null &&getE(cur).getType() == FLOOR) getSE(cur).setType(WALL);
+					if(getW(cur) != null &&getW(cur).getType() == FLOOR && getSW(cur).getType()!=FLOOR) getSW(cur).setType(WALL);
+					if(getE(cur) != null &&getE(cur).getType() == FLOOR && getSE(cur).getType()!=FLOOR) getSE(cur).setType(WALL);
 				}
 			}
 		}
@@ -203,12 +168,6 @@ public class Maze {
 //		}
 		cur.setType(EXIT);//picks the last visited node as the exit
 	}
-	
-	
-	
-	/**
-	* 
-	*/
 	private boolean goodMaze(){//makes sure there aren't too many empty squares in the maze
 		int count = 0;
 		for(int n = 0;n < size;n++){
@@ -227,88 +186,51 @@ public class Maze {
 		}
 	}
 	
-	/**
-	* 
-	*/
-	private Tile getN(Tile tile){
+	
+	public Tile getN(Tile tile){
 		if(tile.getRow() > 0){
 			return maze[tile.getCol()][tile.getRow()-1];
 		}else{
 			return null;
 		}
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getS(Tile tile){
+	public Tile getS(Tile tile){
 		if(tile.getRow() < size-1){
 			return maze[tile.getCol()][tile.getRow()+1];
 		}else{
 			return null;
 		}
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getE(Tile tile){
+	public Tile getE(Tile tile){
 		if(tile.getCol() < size-1){
 			return maze[tile.getCol()+1][tile.getRow()];
 		}else{
 			return null;
 		}
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getW(Tile tile){
+	public Tile getW(Tile tile){
 		if(tile.getCol() > 0){
 			return maze[tile.getCol()-1][tile.getRow()];
 		}else{
 			return null;
 		}
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getNW(Tile tile){
+	public Tile getNW(Tile tile){
 		return getW(getN(tile));
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getNE(Tile tile){
+	public Tile getNE(Tile tile){
 		return getE(getN(tile));
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getSW(Tile tile){
+	public Tile getSW(Tile tile){
 		return getW(getS(tile));
 	}
-	
-	/**
-	* 
-	*/
-	private Tile getSE(Tile tile){
+	public Tile getSE(Tile tile){
 		return getE(getS(tile));
 	}
-	
-	/**
-	* 
-	*/
 	public boolean isKeyStatus() {
 		return keyStatus;
 	}
 
-	/**
-	* 
-	*/
 	public int getSize() {
 		return size;
 	}
@@ -323,11 +245,9 @@ public class Maze {
 			}
 		}
 		return null;
+	}
 	
 	//Irfan -renamed function for User.java
-	/**
-	* 
-	*/
 	public int tileType(int row, int col){
 		return maze[col][row].getType();
 	}
