@@ -1,8 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -20,19 +22,19 @@ public class Menu extends JPanel{
 	private Navigation navigator;
 	
 	public Menu(Navigation n) throws IOException {
-		// Set navigator to the ne passed in
+		// Set navigator to the one passed in
 		navigator = n;
-		
+		this.
 		// Create buttons with icons in them + hover images
-		play = new JButton(createImage("playbuttonP.png"));
+		play = new JButton(createImage("playP.png"));
 		play.setRolloverEnabled(true);
-		play.setRolloverIcon(createImage("playbuttonA.png"));
-		settings = new JButton(createImage("settingsbuttonP.png"));
+		play.setRolloverIcon(createImage("playA.png"));
+		settings = new JButton(createImage("settingsP.png"));
 		settings.setRolloverEnabled(true);
-		settings.setRolloverIcon(createImage("settingsbuttonA.png"));
-		howtoplay = new JButton(createImage("howtoplaybuttonP.png"));
+		settings.setRolloverIcon(createImage("settingsA.png"));
+		howtoplay = new JButton(createImage("howtoplayP.png"));
 		howtoplay.setRolloverEnabled(true);
-		howtoplay.setRolloverIcon(createImage("howtoplaybuttonA.png"));
+		howtoplay.setRolloverIcon(createImage("howtoplayA.png"));
 		
 		// Set border to false
 		play.setBorderPainted(false);
@@ -91,7 +93,7 @@ public class Menu extends JPanel{
 		ImageIcon headerIcon = createImage("title.png");
 		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
 		title.add(headerLabel,BorderLayout.CENTER);
-		title.setBackground(Color.white);
+		title.setOpaque(false);
 		
 		// Place components in a box layout
 		Box box = Box.createVerticalBox();
@@ -109,7 +111,6 @@ public class Menu extends JPanel{
         
         // Adding box containing components
         add(box, JPanel.CENTER_ALIGNMENT);
-
 	}
 	
 	protected static ImageIcon createImage(String path) throws IOException {
@@ -122,4 +123,13 @@ public class Menu extends JPanel{
 		}
 	}
 	
+	@Override
+	public void paintComponent(Graphics g) {
+	    super.paintComponent(g);
+		try {
+			g.drawImage(createImage("background.png").getImage(), 0, 0, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	  }
 }
