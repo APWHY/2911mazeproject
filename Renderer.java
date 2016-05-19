@@ -21,12 +21,14 @@ public class Renderer extends JPanel{
 //			{ 0,0,1,0,0,0,0,0,0,0 },
 //			{ 1,1,1,1,1,1,1,0,1,1 },
 //	};
-	private int ppx, ppy;
+	private int ppx, ppy; // what 
 	private Maze maze;
 	public User user;
 	
 	//constants and other variables
 	private int WID,HEI,offset;
+	
+	
 	private final int RWID = 22, RHEI = 22;
 	private final int MAZESIZE = 30;
 	private static final int EMPTY = 0;
@@ -35,6 +37,11 @@ public class Renderer extends JPanel{
 	private static final int START = 3;
 	private static final int EXIT  = 4;
 	
+	/**
+	* Constructor. 
+	*
+	* Renderer draws the game panel on the game window.
+	*/
 	public Renderer(int width, int height){
 		this.setBackground(Color.BLUE);
 		WID = width;
@@ -49,25 +56,55 @@ public class Renderer extends JPanel{
 		maze = new Maze(MAZESIZE);
 		user = new User(this.maze, RWID, RHEI, WID, HEI, offset); //Irfan
 	}
+	
+	/**
+	* Get the Renderer's maze.
+	* 
+	* @return This Renderer's maze.
+	*/
 	private Maze getMaze(){
 		return maze;
 	}
+	
+	/**
+	* 
+	*/
 	public int getPX(){
 		return ppx;
 	}
+	
+	/**
+	*
+	*/
 	public int getPY(){
 		return ppy;
 	}
+	
+	/**
+	*
+	*/
 	public void setPX(int n){
 		ppx += n;
 	}
+	
+	/**
+	*
+	*/
 	public void setPY(int n){
 		ppy += n;
 	}
+	
+	/**
+	*
+	*/
 	private void drawFrame(Graphics g){
 		drawMaze(g);
 		drawPlayer(g);
 	}
+	
+	/**
+	*
+	*/
 	private void drawMaze(Graphics g){
 		Maze maze = getMaze();
 		for(int m = 0; m < maze.getSize(); m++){
@@ -97,10 +134,16 @@ public class Renderer extends JPanel{
 	}
 	
 	//Edited by Irfan
+	/**
+	*
+	*/
 	private void drawPlayer(Graphics g){
 		this.user.drawPlayer(g);
 	}
 	
+	/**
+	*
+	*/
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
