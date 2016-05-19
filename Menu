@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +20,7 @@ public class Menu extends JPanel{
 	private JButton howtoplay;
 	
 	public Menu() throws IOException {
-		// Create buttons with icons in them + hovr images
+		// Create buttons with icons in them + hover images
 		play = new JButton(createImage("playbuttonP.png"));
 		play.setRolloverEnabled(true);
 		play.setRolloverIcon(createImage("playbuttonA.png"));
@@ -81,7 +80,7 @@ public class Menu extends JPanel{
 		settings.setAlignmentX(CENTER_ALIGNMENT);
 		howtoplay.setAlignmentX(CENTER_ALIGNMENT);
 		
-		// Create a JPanel for title
+		// Create JPanel for title
 		JPanel title = new JPanel();
 		ImageIcon headerIcon = createImage("title.png");
 		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
@@ -98,35 +97,33 @@ public class Menu extends JPanel{
         box.add(Box.createVerticalStrut(20));
         box.add(howtoplay);
         add(box); 
+        
+        setSize(850, 650);
+        setBackground(Color.white);
+        
+        // Adding Buttons
+        add(box, JPanel.CENTER_ALIGNMENT);
 
 	}
-	
+	/***
+	 * this will be put in a navigation class so that a new frame wont be created each time
+	 * ie this main will be removed
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
+		Menu menu = new Menu();
 		// Create a new frame for the Menu screen
 		JFrame frame = new JFrame("Menu");
-		
-		// Set frame to exit when frame is closed
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBackground(Color.white);
+		frame.add(menu);
 
-		// Create and set up the JPanel to put items
-		JPanel menuPanel = new JPanel();
-		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-		menuPanel.setSize(850, 650);
-		menuPanel.setBackground(Color.white);
-		frame.setContentPane(menuPanel);
-		
-		// Adding Buttons
-		Menu buttons = new Menu();
-		buttons.setBackground(Color.WHITE);
-		menuPanel.add(buttons, JPanel.CENTER_ALIGNMENT);
-		
 		// Size the frame
 		frame.setSize(850,650);
 		frame.setResizable(true);
 
 		// Show the frame
 		frame.setVisible(true);
+		
 	}
 	
 	protected static ImageIcon createImage(String path) throws IOException {
