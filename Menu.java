@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -18,8 +17,12 @@ public class Menu extends JPanel{
 	private JButton play;
 	private JButton settings;
 	private JButton howtoplay;
+	private Navigation navigator;
 	
-	public Menu() throws IOException {
+	public Menu(Navigation n) throws IOException {
+		// Set navigator to the ne passed in
+		navigator = n;
+		
 		// Create buttons with icons in them + hover images
 		play = new JButton(createImage("playbuttonP.png"));
 		play.setRolloverEnabled(true);
@@ -56,6 +59,7 @@ public class Menu extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
+				// Call Navigator to run game
 			}
 		});
 		
@@ -64,6 +68,7 @@ public class Menu extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
+				// Call Navigator to show settings
 			}
 		});
 		
@@ -72,6 +77,7 @@ public class Menu extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
+				// Call Navigator to show how to play
 			}
 		});	
 				
@@ -101,29 +107,9 @@ public class Menu extends JPanel{
         setSize(850, 650);
         setBackground(Color.white);
         
-        // Adding Buttons
+        // Adding box containing components
         add(box, JPanel.CENTER_ALIGNMENT);
 
-	}
-	/***
-	 * this will be put in a navigation class so that a new frame wont be created each time
-	 * ie this main will be removed
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		Menu menu = new Menu();
-		// Create a new frame for the Menu screen
-		JFrame frame = new JFrame("Menu");
-		frame.add(menu);
-
-		// Size the frame
-		frame.setSize(850,650);
-		frame.setResizable(true);
-
-		// Show the frame
-		frame.setVisible(true);
-		
 	}
 	
 	protected static ImageIcon createImage(String path) throws IOException {
