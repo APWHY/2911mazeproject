@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,23 +15,13 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Menu extends JPanel{
-	/*
-	private Button play;
-	private Button settings;
-	private Button howtoplay;
-	*/
+	
 	private JButton play;
 	private JButton settings;
 	private JButton howtoplay;
 	
 	public Menu() throws IOException {
-		/*
-		play = new Button(createImage("playbuttonP.png"), createImage("playbuttonA.png"));
-		settings = new Button(createImage("settingsbuttonP.png"), createImage("settingsbuttonA.png"));
-		howtoplay = new Button(createImage("howtoplaybuttonP.png"), createImage("howtoplaybuttonA.png"));
-		*/
-		
-		// Create buttons with icons in them
+		// Create buttons with icons in them + hovr images
 		play = new JButton(createImage("playbuttonP.png"));
 		play.setRolloverEnabled(true);
 		play.setRolloverIcon(createImage("playbuttonA.png"));
@@ -63,35 +52,56 @@ public class Menu extends JPanel{
 		settings.setActionCommand("Settings");
 		howtoplay.setActionCommand("HowToPlay");
 		
-		// Set ActionListener
+		// Set ActionListener for play button
 		play.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				play.setVisible(false);
-			
-				
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
 			}
 		});
+		
+		// Set ActionListener for settings button
+		settings.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
+		
+		// Set ActionListener for howtoplay button
+		howtoplay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});	
 				
 		// Set Alignment
 		play.setAlignmentX(CENTER_ALIGNMENT);
 		settings.setAlignmentX(CENTER_ALIGNMENT);
 		howtoplay.setAlignmentX(CENTER_ALIGNMENT);
 		
-		Box box = Box.createVerticalBox();
+		// Create JPanel for title
+		JPanel title = new JPanel();
+		ImageIcon headerIcon = createImage("title.png");
+		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
+		title.add(headerLabel,BorderLayout.CENTER);
+		title.setBackground(Color.white);
 		
-        box.add(play);
+		// Place components in a box layout
+		Box box = Box.createVerticalBox();
+		box.add(title);
+		box.add(Box.createVerticalStrut(40));
+		box.add(play);
         box.add(Box.createVerticalStrut(20));
         box.add(settings);
         box.add(Box.createVerticalStrut(20));
         box.add(howtoplay);
-
         add(box); 
 
 	}
 	
 	public static void main(String[] args) throws IOException {
-
 		// Create a new frame for the Menu screen
 		JFrame frame = new JFrame("Menu");
 		
@@ -106,35 +116,10 @@ public class Menu extends JPanel{
 		menuPanel.setBackground(Color.white);
 		frame.setContentPane(menuPanel);
 		
-		// Add the title
-		JPanel header = new JPanel();
-		ImageIcon headerIcon = createImage("title.png");
-		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
-		header.add(headerLabel,BorderLayout.CENTER);
-		header.setBackground(Color.white);
-		menuPanel.add(header);
-		
 		// Adding Buttons
 		Menu buttons = new Menu();
 		buttons.setBackground(Color.WHITE);
 		menuPanel.add(buttons, JPanel.CENTER_ALIGNMENT);
-		
-		
-		
-		/*
-		Box box = Box.createVerticalBox();
-		
-		buttons.add(buttons.play, JPanel.CENTER_ALIGNMENT);
-		buttons.add(buttons.settings, JPanel.CENTER_ALIGNMENT);
-		buttons.add(buttons.howtoplay, JPanel.CENTER_ALIGNMENT);
-		buttons.setBackground(Color.white);
-		
-		box.add(buttons.play, JPanel.CENTER_ALIGNMENT);
-		box.add(buttons.settings, JPanel.CENTER_ALIGNMENT);
-		box.add(buttons.howtoplay, JPanel.CENTER_ALIGNMENT);
-		
-		menuPanel.add(box);
-		*/
 		
 		// Size the frame
 		frame.setSize(850,650);
