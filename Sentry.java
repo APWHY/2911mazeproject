@@ -1,5 +1,5 @@
 //use bytes instead of ints?
-package mazeGUI;
+
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package mazeGUI;
+
 
 public class Tile {
 	private static final int EMPTY = 0;
