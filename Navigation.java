@@ -14,12 +14,11 @@ public class Navigation {
 	//private Game g;
 	//private PauseScreen p;
 	
-	Navigation () {
+	public Navigation () {
 		current = new JFrame("The Amazing Maze");
-		current.setSize(700, 500);
+		current.setSize(850, 650);
 		current.setVisible(true);
 		current.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		try {
 			this.m = new Menu(this);
 		} catch (IOException e) {
@@ -38,12 +37,38 @@ public class Navigation {
 	}
 	
 	/**
-	 * Opens menu screen
+	 * Shows menu screen
 	 */
 	public void runMenu() {
 		m.setVisible(true);
 		setCurrentFrame(m);
 	}
+	
+	/*
+	 
+	//Shows game
+	public void runGame() {
+		g = new Game();
+		g.setVisible(true);
+		setFrameSettings(g);
+	}
+	
+	//Shows the settings screen	 
+	public void runSettings() {
+		s = new Settings(this);
+		s.setVisible(true);
+		setCurrentFrame(s);
+	}
+
+	
+	//Shows how to play screen
+	public void runHowToPlay() {
+		h = new HowToPlay(this);
+        h.setVisible(true);
+		setCurrentFrame(h);
+	}
+	
+	*/
 	
 	/***
 	 * Sets the displayed screen to the screen that is passed in
