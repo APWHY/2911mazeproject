@@ -81,7 +81,7 @@ public class Menu extends JPanel{
 		settings.setAlignmentX(CENTER_ALIGNMENT);
 		howtoplay.setAlignmentX(CENTER_ALIGNMENT);
 		
-		// Create JPanel for title
+		// Create a JPanel for title
 		JPanel title = new JPanel();
 		ImageIcon headerIcon = createImage("title.png");
 		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
