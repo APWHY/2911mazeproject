@@ -1,0 +1,157 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
+@SuppressWarnings("serial")
+public class Menu extends JPanel{
+	/*
+	private Button play;
+	private Button settings;
+	private Button howtoplay;
+	*/
+	private JButton play;
+	private JButton settings;
+	private JButton howtoplay;
+	
+	public Menu() throws IOException {
+		/*
+		play = new Button(createImage("playbuttonP.png"), createImage("playbuttonA.png"));
+		settings = new Button(createImage("settingsbuttonP.png"), createImage("settingsbuttonA.png"));
+		howtoplay = new Button(createImage("howtoplaybuttonP.png"), createImage("howtoplaybuttonA.png"));
+		*/
+		
+		// Create buttons with icons in them
+		play = new JButton(createImage("playbuttonP.png"));
+		play.setRolloverEnabled(true);
+		play.setRolloverIcon(createImage("playbuttonA.png"));
+		settings = new JButton(createImage("settingsbuttonP.png"));
+		settings.setRolloverEnabled(true);
+		settings.setRolloverIcon(createImage("settingsbuttonA.png"));
+		howtoplay = new JButton(createImage("howtoplaybuttonP.png"));
+		howtoplay.setRolloverEnabled(true);
+		howtoplay.setRolloverIcon(createImage("howtoplaybuttonA.png"));
+		
+		// Set border to false
+		play.setBorderPainted(false);
+		settings.setBorderPainted(false);
+		howtoplay.setBorderPainted(false);
+		
+		// Set content area to be smaller/only contain image
+		play.setContentAreaFilled(false);
+		settings.setContentAreaFilled(false);
+		howtoplay.setContentAreaFilled(false);
+		
+		// Set Background of buttons to white
+		play.setBackground(Color.white);
+		settings.setBackground(Color.white);
+		howtoplay.setBackground(Color.white);
+
+		// Set action commands
+		play.setActionCommand("Play");
+		settings.setActionCommand("Settings");
+		howtoplay.setActionCommand("HowToPlay");
+		
+		// Set ActionListener
+		play.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				play.setVisible(false);
+			
+				
+			}
+		});
+				
+		// Set Alignment
+		play.setAlignmentX(CENTER_ALIGNMENT);
+		settings.setAlignmentX(CENTER_ALIGNMENT);
+		howtoplay.setAlignmentX(CENTER_ALIGNMENT);
+		
+		Box box = Box.createVerticalBox();
+		
+        box.add(play);
+        box.add(Box.createVerticalStrut(20));
+        box.add(settings);
+        box.add(Box.createVerticalStrut(20));
+        box.add(howtoplay);
+
+        add(box); 
+
+	}
+	
+	public static void main(String[] args) throws IOException {
+
+		// Create a new frame for the Menu screen
+		JFrame frame = new JFrame("Menu");
+		
+		// Set frame to exit when frame is closed
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBackground(Color.white);
+
+		// Create and set up the JPanel to put items
+		JPanel menuPanel = new JPanel();
+		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+		menuPanel.setSize(850, 650);
+		menuPanel.setBackground(Color.white);
+		frame.setContentPane(menuPanel);
+		
+		// Add the title
+		JPanel header = new JPanel();
+		ImageIcon headerIcon = createImage("title.png");
+		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
+		header.add(headerLabel,BorderLayout.CENTER);
+		header.setBackground(Color.white);
+		menuPanel.add(header);
+		
+		// Adding Buttons
+		Menu buttons = new Menu();
+		buttons.setBackground(Color.WHITE);
+		menuPanel.add(buttons, JPanel.CENTER_ALIGNMENT);
+		
+		
+		
+		/*
+		Box box = Box.createVerticalBox();
+		
+		buttons.add(buttons.play, JPanel.CENTER_ALIGNMENT);
+		buttons.add(buttons.settings, JPanel.CENTER_ALIGNMENT);
+		buttons.add(buttons.howtoplay, JPanel.CENTER_ALIGNMENT);
+		buttons.setBackground(Color.white);
+		
+		box.add(buttons.play, JPanel.CENTER_ALIGNMENT);
+		box.add(buttons.settings, JPanel.CENTER_ALIGNMENT);
+		box.add(buttons.howtoplay, JPanel.CENTER_ALIGNMENT);
+		
+		menuPanel.add(box);
+		*/
+		
+		// Size the frame
+		frame.setSize(850,650);
+		frame.setResizable(true);
+
+		// Show the frame
+		frame.setVisible(true);
+	}
+	
+	protected static ImageIcon createImage(String path) throws IOException {
+		java.net.URL imgURL = Menu.class.getResource(path);
+		if (imgURL != null) {
+			return new ImageIcon(ImageIO.read(imgURL));
+		} else {
+			System.err.println("Couldn't find file: " + path);
+			return null;
+		}
+	}
+	
+}
