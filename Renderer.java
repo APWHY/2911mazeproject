@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class Renderer extends JPanel implements ActionListener, MouseListener, KeyListener{
+public class Renderer extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	// Game related variables
 	private Maze maze;
@@ -67,24 +67,24 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	/**
 	 * 
-	 * @return
+	 * 
+	 * @param vert
+	 * @param horz
+	 * @param tickthis.maze, 
 	 */
-	private Maze getMaze(){
-		return maze;
+	public void updateGame(int vert, int horz, int tick){
+		maze.updateMaze();
+		maze = player.move(vert , horz, this.maze);
 	}
 	
 	/**
 	 * 
-	 * 
-	 * @param vert
-	 * @param horz
-	 * @param tick
+	 * @return
 	 */
-	public void updateGame(int vert, int horz, int tick){
-		maze.updateMaze();
-		maze = player.move(vert,horz,maze);
+	public Maze getMaze(){
+		return maze;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -99,84 +99,125 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 
 	}
 	
-	
+	/**
+	 * 
+	 * 
+	 * @param g
+	 */
 	private void drawMaze(Graphics g){
-		Maze maze = getMaze();
-		for(int m = 0; m < maze.getSize(); m++){
-			for(int n = 0;n <  maze.getSize(); n++){
-				if (maze.getOne(n, m).getType() == FLOOR){//grey			
+		
+		for (int m = 0; m < this.maze.getSize(); m++){
+			for (int n = 0;n <  this.maze.getSize(); n++){
+				if (this.maze.getOne(n, m).getType() == FLOOR){//grey			
 					g.setColor(Color.GRAY);
-				}else if (maze.getOne(n, m).getType() == START){//red
+				} else if (this.maze.getOne(n, m).getType() == START){//red
 					g.setColor(Color.RED);
-				}else if (maze.getOne(n, m).getType() == WALL){//blue
+				} else if (this.maze.getOne(n, m).getType() == WALL){//blue
 					g.setColor(Color.BLUE);
-				}else if (maze.getOne(n, m).getType() == EXIT){//cyan
+				} else if (this.maze.getOne(n, m).getType() == EXIT){//cyan
 					g.setColor(Color.CYAN);
-				}else if (maze.getOne(n, m).getType() == EMPTY){//pink
+				} else if (this.maze.getOne(n, m).getType() == EMPTY){//pink
 					g.setColor(Color.PINK);
 				}
 				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
-				g.fillRect(n*(RWID), m*(RHEI), RWID,RHEI); //IRfan
+				g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan
 			}
 		}
-		colSet= colSet + colFlag;
-		if (colSet > 200){
-			colFlag = -1;
+		
+		this.colSet = this.colSet + this.colFlag;
+		
+		if (this.colSet > 200){
+			this.colFlag = -1;
 		}
-		if (colSet < 150){
-			colFlag = 1;
+		
+		if (this.colSet < 150){
+			this.colFlag = 1;
 		}
 	}
 	
 	//Edited by Irfan
-	private void drawPlayer(Graphics g){//it's more OOP for this function to be in renderer
-		g.setColor(new Color(20,player.caught,50));
-		//Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
-		g.fillOval(player.getxPos()-(player.getUserRad()), player.getyPos()-(player.getUserRad()), player.getUserRad()*2, player.getUserRad()*2);
+	/**
+	 * 
+	 * @param g
+	 */
+	private void drawPlayer(Graphics g){ // it's more OOP for this function to be in renderer
+		
+		g.setColor(new Color(20, this.player.caught,50));
+		// Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
+		// original
+		// g.fillOval(player.getxPos()+OFFSET, player.getyPos()+OFFSET, player.getUserRad(), player.getUserRad());
+		g.fillOval(this.player.getxPos()-(this.player.getUserRad()), this.player.getyPos()-(this.player.getUserRad()), this.player.getUserRad()*2, this.player.getUserRad()*2);
 
-		//original one
-		//g.fillOval(player.getxPos()+OFFSET, player.getyPos()+OFFSET, player.getUserRad(), player.getUserRad());
-
+		
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param g
+	 */
 	private void drawSentries(Graphics g){
-		for(Sentry sentry: maze.getSentries()){
+		
+		for(Sentry sentry: this.maze.getSentries()){
+			
 			g.setColor(Color.BLACK);
-			g.fillOval(sentry.getColumn()*(RWID), sentry.getRow()*(RHEI), RWID,RHEI);
+			g.fillOval(sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), this.RWID, this.RHEI);
 			g.setColor(Color.ORANGE);
-			int centX = sentry.getColumn()*(RWID) + RWID/2;
-			int centY = sentry.getRow()*(RHEI) + RHEI/2;		
-			for(int n = 0; n <= ARCDIST; n = n + 2 ){
-				g.drawArc(centX-ARCDIST, centY-ARCDIST, ARCDIST*2-2*n, ARCDIST*2-2*n, sentry.getDegree(), ARCWIDTH);
+			
+			int centX = sentry.getColumn()*(this.RWID) + this.RWID/2;
+			int centY = sentry.getRow()*(this.RHEI) + this.RHEI/2;		
+			
+			for(int n = 0; n <= this.ARCDIST; n = n + 2 ){
+				g.drawArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 - 2*n, this.ARCDIST*2 - 2*n, sentry.getDegree(), this.ARCWIDTH);
 				centX += 2;
 				centY += 2;
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 */
 	@Override
-	protected void paintComponent(Graphics g){
+	protected void paintComponent(Graphics g){ // Why is this protected? private?
 		super.paintComponent(g);
-		drawFrame(g);
+		this.drawFrame(g);
 	}
+	
+	/**
+	 * 
+	 */
 	@Override
 	public void keyTyped(KeyEvent e) {	
 	}
 	
 	//Edited by Irfan.
+	/**
+	 * 
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {	//useful
-		if(e.getKeyCode() == KeyEvent.VK_UP){
-			vert = 1;
+		
+		if (e.getKeyCode() == KeyEvent.VK_UP){
+			this.vert = 1;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN){
-			vert = -1;
+		
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			this.vert = -1;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-			horz = -1;
+		
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+			this.horz = -1;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_LEFT){
-			horz = 1;
+		
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+			this.horz = 1;
 		}
 	}
+	
+	/**
+	 * 
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {	
 		if(e.getKeyCode() == KeyEvent.VK_UP){
@@ -193,6 +234,8 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		}
 		
 	}
+	
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {	//useful
 

@@ -1,11 +1,12 @@
 
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.io.IOException;
 
-public class Navigation{
+import javax.swing.JFrame;
+
+public class Navigation {
 	
 	
 	private JFrame current;
@@ -21,9 +22,13 @@ public class Navigation{
 	private final int WHEI = 800;
 	private final int FPS = 1000/60;
 
+	/**
+	 * 
+	 */
 	public Navigation() {
 		startWindow();
 	}
+	
 	private void startWindow(){
 		//display = new Display Menu();
 

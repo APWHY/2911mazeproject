@@ -10,11 +10,11 @@ public class Maze {
 	private static final int WALL  = 2;
 	private static final int START = 3;
 	private static final int EXIT  = 4;
-	private static final int SENTRY  = 5;	
+	private static final int SENTRY  = 5;
 	
 	// Maze generator constants
 	private static final float CYCLECHANCE = (float) 0.75;
-	private static final int NUMSEN = 15; // Numbers of Sentries - Andy
+	private static final int NUMSEN = 30; // Numbers of Sentries - Andy
 	private static final int SENTRYSPACE = 3; // Space in between Sentries
 	
 	private Tile[][] maze;
