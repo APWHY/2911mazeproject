@@ -1,4 +1,5 @@
 public class Tile {
+
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
 	private static final int WALL  = 2;
@@ -11,11 +12,11 @@ public class Tile {
 	private int type;
 	
 	public Tile(int horz,int vert){
+		
 		col = horz;
 		row = vert;
-		prev = null;//this is actually useless -- probably should get rid of it. Can be used for pathfinding but will almost always give a shitty path
-		type = EMPTY;
-		
+		type = EMPTY;		
+	
 	}
 
 
