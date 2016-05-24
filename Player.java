@@ -1,13 +1,10 @@
-package mazeGUI;
-
-import java.awt.Color;
-import java.awt.Graphics;
+package Default;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
-public class Player{
-	private final int SPEED = 1;
+public class Player {
+
+	// Constants
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
 	private static final int WALL  = 2;
@@ -15,24 +12,25 @@ public class Player{
 	private static final int EXIT  = 4;
 	private static final int SENTRY  = 5;	
 	private static final int REALLYBIGNUMBER = 36000;
+	
+	private final int SPEED = 1;
+	
 	private int xPos;
 	private int yPos;
 	
-	//private Graphics g;
-	private Maze maze;
 	private int tileWidth;
 	private int tileHeight;
 	private int arcDist;
 	private int arcWidth;
 
 	private int userRad; //Tom -- using radius instead since it's a circle
-//	private int userWidth;
-//	private int userHeight;
-	public int caught;//just for testing get rid of this
+
+	public int caught; // just for testing get rid of this - Could use to trigger game over?
+	
 	JFrame test = new JFrame("Irfan's user");
 
-	public Player(/*Graphics g,*/ Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
-		this.maze = maze;
+	public Player(/*Graphics g, */Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
+		//this.maze = maze;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.arcDist = arcDist;
@@ -45,27 +43,24 @@ public class Player{
 
 	}
 	
-	public void drawPlayer(Graphics g) {
-
-	}
 	public Maze move(int vert, int horz, Maze maze){
-		this.maze = maze;
+		
 		if(vert == 1){
-			up();
+			up(maze);
 		}
 		if(vert == -1){
-			down();
+			down(maze);
 		}
 		if(horz == 1){
-			left();
+			left(maze);
 		}
 		if(horz == -1){
-			right();
+			right(maze);
 		}
-		checkLasers();
+		checkLasers(maze);
 		return maze;
 	}
-	private void checkLasers(){
+	private void checkLasers(Maze maze){
 		ArrayList<Sentry> sentries = maze.getSentries();
 		float playerArc = 0;
 		float playerSent = 0;
@@ -115,36 +110,37 @@ public class Player{
 			}
 		}
 	}
-	public void up() {
-		for(int i = 0; i < SPEED && !tileIsWall(xPos, yPos); i++)
+	
+	public void up(Maze maze) {
+		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			yPos -= 1;
-		if(tileIsWall(xPos, yPos))
+		if(tileIsWall(maze, xPos, yPos))
 			yPos++;
 	}
 
-	public void down() {
-		for(int i = 0; i < SPEED && !tileIsWall(xPos, yPos); i++)
+	public void down(Maze maze) {
+		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			yPos += 1;
-		if(tileIsWall(xPos, yPos))
+		if(tileIsWall(maze, xPos, yPos))
 			yPos--;
 	}
 
-	public void right() {
-		for(int i = 0; i < SPEED && !tileIsWall(xPos, yPos); i++)
+	public void right(Maze maze) {
+		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			xPos += 1;
-		if(tileIsWall(xPos, yPos))
+		if(tileIsWall(maze, xPos, yPos))
 			xPos--;
 	}
 
-	public void left() {
-		for(int i = 0; i < SPEED && !tileIsWall(xPos, yPos); i++)
-			xPos -= 1;
-		if(tileIsWall(xPos, yPos))
-			xPos++;
+	public void left(Maze maze) {
+		
+		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) xPos -= 1;
+		
+		if(tileIsWall(maze, xPos, yPos)) xPos++;
 	}
 	
 	
-	private boolean tileIsWall(int x, int y){
+	private boolean tileIsWall(Maze maze, int x, int y){
 		//checks that the player doesn't leave the maze
 		if(x < userRad || y < userRad || x >= (maze.getSize())*tileWidth-userRad || y >= (maze.getSize())*tileHeight-userRad){
 			return true;
