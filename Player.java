@@ -10,6 +10,7 @@ public class Player {
 	private static final int START = 3;
 	private static final int EXIT  = 4;
 	private static final int SENTRY  = 5;	
+	private static final int KEY = 6;
 	
 	private static final int REALLYBIGNUMBER = 36000;
 	private final int SPEED = 1;
@@ -144,6 +145,10 @@ public class Player {
 			yPos -= 1;
 		if(tileIsWall(maze, xPos, yPos))
 			yPos++;
+		// if there's a key above - Andy
+		if(maze.getN(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
+			maze.getN(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
+		}
 	}
 
 	public void down(Maze maze) {
@@ -151,6 +156,10 @@ public class Player {
 			yPos += 1;
 		if(tileIsWall(maze, xPos, yPos))
 			yPos--;
+		// if there's a key below - Andy
+		if(maze.getS(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
+			maze.getS(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
+		}
 	}
 
 	public void right(Maze maze) {
@@ -158,6 +167,10 @@ public class Player {
 			xPos += 1;
 		if(tileIsWall(maze, xPos, yPos))
 			xPos--;
+		// if there's a key in the right - Andy
+		if(maze.getE(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
+			maze.getE(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
+		}
 	}
 
 	public void left(Maze maze) {
@@ -165,6 +178,10 @@ public class Player {
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) xPos -= 1;
 		
 		if(tileIsWall(maze, xPos, yPos)) xPos++;
+		// if there's a key in the left - Andy
+		if(maze.getW(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
+			maze.getW(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
+		}
 	}
 	
 	
