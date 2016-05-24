@@ -1,0 +1,13 @@
+#!/bin/sh
+
+for file in `find -iname "*.class"`
+do 
+    rm $file
+done
+
+
+for file in `find -iname "*.java"`
+do 
+    echo "Compiling "$file
+    javac $file
+done

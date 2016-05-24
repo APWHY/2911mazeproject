@@ -24,40 +24,40 @@ public class Menu extends JPanel{
 	public Menu(Navigation n) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
-		this.
+		
 		// Create buttons with icons in them + hover images
-		play = new JButton(createImage("playP.png"));
-		play.setRolloverEnabled(true);
-		play.setRolloverIcon(createImage("playA.png"));
-		settings = new JButton(createImage("settingsP.png"));
-		settings.setRolloverEnabled(true);
-		settings.setRolloverIcon(createImage("settingsA.png"));
-		howtoplay = new JButton(createImage("howtoplayP.png"));
-		howtoplay.setRolloverEnabled(true);
-		howtoplay.setRolloverIcon(createImage("howtoplayA.png"));
+		this.play = new JButton(createImage("playP.png"));
+	    this.play.setRolloverEnabled(true);
+	    this.play.setRolloverIcon(createImage("playA.png"));
+	    this.settings = new JButton(createImage("settingsP.png"));
+	    this.settings.setRolloverEnabled(true);
+	    this.settings.setRolloverIcon(createImage("settingsA.png"));
+	    this.howtoplay = new JButton(createImage("howtoplayP.png"));
+	    this.howtoplay.setRolloverEnabled(true);
+	    this.howtoplay.setRolloverIcon(createImage("howtoplayA.png"));
 		
 		// Set border to false
-		play.setBorderPainted(false);
-		settings.setBorderPainted(false);
-		howtoplay.setBorderPainted(false);
+	    this.play.setBorderPainted(false);
+	    this.settings.setBorderPainted(false);
+	    this.howtoplay.setBorderPainted(false);
 		
 		// Set content area to be smaller/only contain image
-		play.setContentAreaFilled(false);
-		settings.setContentAreaFilled(false);
-		howtoplay.setContentAreaFilled(false);
+	    this.play.setContentAreaFilled(false);
+	    this.settings.setContentAreaFilled(false);
+	    this.howtoplay.setContentAreaFilled(false);
 		
 		// Set Background of buttons to white
-		play.setBackground(Color.white);
-		settings.setBackground(Color.white);
-		howtoplay.setBackground(Color.white);
+	    this.play.setBackground(Color.white);
+	    this.settings.setBackground(Color.white);
+	    this.howtoplay.setBackground(Color.white);
 
 		// Set action commands
-		play.setActionCommand("Play");
-		settings.setActionCommand("Settings");
-		howtoplay.setActionCommand("HowToPlay");
+	    this.play.setActionCommand("Play");
+	    this.settings.setActionCommand("Settings");
+	    this.howtoplay.setActionCommand("HowToPlay");
 		
 		// Set ActionListener for play button
-		play.addActionListener(new ActionListener() {
+	    this.play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -66,7 +66,7 @@ public class Menu extends JPanel{
 		});
 		
 		// Set ActionListener for settings button
-		settings.addActionListener(new ActionListener() {
+	    this.settings.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -75,7 +75,7 @@ public class Menu extends JPanel{
 		});
 		
 		// Set ActionListener for howtoplay button
-		howtoplay.addActionListener(new ActionListener() {
+	    this.howtoplay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -84,9 +84,9 @@ public class Menu extends JPanel{
 		});	
 				
 		// Set Alignment
-		play.setAlignmentX(CENTER_ALIGNMENT);
-		settings.setAlignmentX(CENTER_ALIGNMENT);
-		howtoplay.setAlignmentX(CENTER_ALIGNMENT);
+	    this.play.setAlignmentX(CENTER_ALIGNMENT);
+	    this.settings.setAlignmentX(CENTER_ALIGNMENT);
+	    this.howtoplay.setAlignmentX(CENTER_ALIGNMENT);
 		
 		// Create JPanel for title
 		JPanel title = new JPanel();
