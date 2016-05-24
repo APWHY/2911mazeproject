@@ -11,6 +11,7 @@ public class Maze {
 	private static final int START = 3;
 	private static final int EXIT  = 4;
 	private static final int SENTRY  = 5;
+	private static final int KEY = 6;
 	
 	// Maze generator constants
 	private static final float CYCLECHANCE = (float) 0.75;
@@ -43,6 +44,7 @@ public class Maze {
 		} while (!goodMaze()); // Check if maze is good
 		
 		addSentries(NUMSEN);// Adding sentries to the maze - Andy
+		addKey(maze, size); // Adding the key to the maze - Andy
 		keyStatus = false;
 	}
 	
@@ -85,6 +87,44 @@ public class Maze {
 				num--;
 			}
 		}
+	}
+	
+	// Function to add the key to the maze - Andy
+	
+	public void addKey(Tile[][] maze, int size) {
+		int row = size;
+		int col = 0;
+		do {
+			Random x = new Random();
+			Random y = new Random();
+			row = x.nextInt(size);
+			col = y.nextInt(size);
+			if(maze[row][col].getType() == FLOOR && isCorner(maze[row][col])) { // if the tile is a floor and a corner, add a key to it
+				maze[row][col].setType(KEY);
+			}
+		}while(maze[row][col].getType() != FLOOR || !isCorner(maze[row][col])); // continue the loop if the tile is not a floor or a corner
+	}
+	
+	// Function to check if a tile is a corner (one pathway only) - Andy
+	
+	public boolean isCorner(Tile tile) {
+		int count = 0;
+		if (getN(tile).getType() == FLOOR) {
+			count++;
+		}
+		if (getS(tile).getType() == FLOOR) {
+			count++;
+		}
+		if (getE(tile).getType() == FLOOR) {
+			count++;
+		}
+		if (getW(tile).getType() == FLOOR) {
+			count++;
+		}
+		if (count == 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
