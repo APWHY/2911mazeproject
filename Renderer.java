@@ -1,143 +1,276 @@
-package mazeGUI;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+package Default;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
 @SuppressWarnings("serial")
-public class Renderer extends JPanel{
-//testing variables -- these won't be in once maze is integrated
-	private int colSet,colFlag;
-//	private final int[][] testMaze = {
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,0,1,1,1 },
-//			{ 0,1,0,0,0,0,1,0,0,0 },
-//			{ 0,1,0,0,0,1,0,1,0,0 },
-//			{ 0,0,1,0,0,0,1,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 1,0,1,0,0,1,0,0,0,0 },
-//			{ 0,0,1,0,0,0,0,0,0,0 },
-//			{ 1,1,1,1,1,1,1,0,1,1 },
-//	};
-	private int ppx, ppy;
+public class Renderer extends JPanel implements ActionListener, MouseListener, KeyListener {
+	
+	// Game related variables
 	private Maze maze;
-	public Player player;
+	private int colSet,colFlag;
+	private Player player;
+	private TimerDisplay timer;
+	
+	// Graphics related variables
 	BufferedImage canvas;
-	//constants and other variables
-	private int WID,HEI,offset;
-	private final int RWID = 24, RHEI = 24;//make this divisible by 4
+	private int vert, horz,tick;
+	private int WID,HEI,OFFSET;
+	
+	// Constants
+	private final int RWID = 24, RHEI = 24; // Must be divisible by 4
 	private final int MAZESIZE = 30;
+	
 	private static final int EMPTY = 0;
 	private static final int FLOOR = 1;
 	private static final int WALL  = 2;
 	private static final int START = 3;
 	private static final int EXIT  = 4;
+	
 	private final int ARCDIST = (int)(RWID*1.3);
 	private final int ARCWIDTH = 45;
 	
+	private final int FPS = 1000/60;
+	private final int TICKRATE = 60; //number of frames for one second
+	
 	public Renderer(int width, int height){
+		
 		this.setBackground(Color.GREEN);
-		WID = width;
-		HEI = height;
-		offset = 50; //MAKE CAPITALS? -Irfan.
-		colSet = 150;
-		colFlag = 1;
-		ppx = WID/2;
-		ppy = HEI/2;
+		this.vert = this.horz = this.tick = 0;
+		this.WID = width;
+		this.HEI = height;
+		this.OFFSET = 30; 
+		this.colSet = 150;
+		this.colFlag = 1;
 		this.setVisible(true);
 		this.setFocusable(true);
-		maze = new Maze(MAZESIZE);
-		canvas = new BufferedImage(RWID*MAZESIZE,RHEI*MAZESIZE,BufferedImage.TYPE_3BYTE_BGR);
-		player = new Player(this.maze, RWID, RHEI,ARCDIST,ARCWIDTH); //Irfan
-		//Tom -- we don't pass offset because we just add offset to the player coordinates -- it's not relevant to the player
+		this.maze = new Maze(this.MAZESIZE);
+		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
+		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
+		this.timer = new TimerDisplay();
+		//Tom -- we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
 		//we also don't need framewidth and frameheight for the same reasons
+		
+		Timer fpsTimer = new Timer(FPS, this);
+		fpsTimer.setRepeats(true);
+		fpsTimer.start();
+		
+		addKeyListener(this); // ???
+		addMouseListener(this); // ???
 	}
-	private Maze getMaze(){
-		return maze;
-	}
+	
+	/**
+	 * 
+	 * 
+	 * @param vert
+	 * @param horz
+	 * @param tickthis.maze, 
+	 */
 	public void updateGame(int vert, int horz, int tick){
 		maze.updateMaze();
-		maze = player.move(vert,horz,maze);
-		
+		maze = player.move(vert , horz, this.maze);
 	}
-	public int getPX(){
-		return ppx;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Maze getMaze(){
+		return maze;
 	}
-	public int getPY(){
-		return ppy;
-	}
-	public void setPX(int n){
-		ppx += n;
-	}
-	public void setPY(int n){
-		ppy += n;
-	}
+
+	/**
+	 * 
+	 * 
+	 * @param g
+	 */
 	private void drawFrame(Graphics g){
 		Graphics cg = canvas.getGraphics();
 		drawMaze(cg);
 		drawSentries(cg);
 		drawPlayer(cg);
-		g.drawImage(canvas, offset, offset, null);
+		drawTimer(cg);
+		g.drawImage(canvas, OFFSET, OFFSET, null);
 
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param g
+	 */
 	private void drawMaze(Graphics g){
-		Maze maze = getMaze();
-		for(int m = 0; m < maze.getSize(); m++){
-			for(int n = 0;n <  maze.getSize(); n++){
-				if (maze.getOne(n, m).getType() == FLOOR){//grey			
+		
+		for (int m = 0; m < this.maze.getSize(); m++){
+			for (int n = 0;n <  this.maze.getSize(); n++){
+				if (this.maze.getOne(n, m).getType() == FLOOR){//grey			
 					g.setColor(Color.GRAY);
-				}else if (maze.getOne(n, m).getType() == START){//red
+				} else if (this.maze.getOne(n, m).getType() == START){//red
 					g.setColor(Color.RED);
-				}else if (maze.getOne(n, m).getType() == WALL){//blue
+				} else if (this.maze.getOne(n, m).getType() == WALL){//blue
 					g.setColor(Color.BLUE);
-				}else if (maze.getOne(n, m).getType() == EXIT){//cyan
+				} else if (this.maze.getOne(n, m).getType() == EXIT){//cyan
 					g.setColor(Color.CYAN);
-				}else if (maze.getOne(n, m).getType() == EMPTY){//pink
+				} else if (this.maze.getOne(n, m).getType() == EMPTY){//pink
 					g.setColor(Color.PINK);
 				}
-				//g.fillRect(offset+n*(RWID+1), offset+m*(RHEI+1), RWID,RHEI);
-				g.fillRect(n*(RWID), m*(RHEI), RWID,RHEI); //IRfan
+				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
+				g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan
 			}
 		}
-		colSet= colSet + colFlag;
-		if (colSet > 200){
-			colFlag = -1;
+		
+		this.colSet = this.colSet + this.colFlag;
+		
+		if (this.colSet > 200){
+			this.colFlag = -1;
 		}
-		if (colSet < 150){
-			colFlag = 1;
+		
+		if (this.colSet < 150){
+			this.colFlag = 1;
 		}
 	}
 	
 	//Edited by Irfan
-	private void drawPlayer(Graphics g){//it's more OOP for this function to be in renderer
-		g.setColor(new Color(20,player.caught,50));
-		//Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
-		g.fillOval(player.getxPos()-(player.getUserRad()), player.getyPos()-(player.getUserRad()), player.getUserRad()*2, player.getUserRad()*2);
+	/**
+	 * 
+	 * @param g
+	 */
+	private void drawPlayer(Graphics g){ // it's more OOP for this function to be in renderer
+		
+		g.setColor(new Color(20, this.player.caught,50));
+		// Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
+		// original
+		// g.fillOval(player.getxPos()+OFFSET, player.getyPos()+OFFSET, player.getUserRad(), player.getUserRad());
+		g.fillOval(this.player.getxPos()-(this.player.getUserRad()), this.player.getyPos()-(this.player.getUserRad()), this.player.getUserRad()*2, this.player.getUserRad()*2);
 
-		//original one
-		//g.fillOval(player.getxPos()+offset, player.getyPos()+offset, player.getUserRad(), player.getUserRad());
-
+		
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param g
+	 */
 	private void drawSentries(Graphics g){
-		for(Sentry sentry: maze.getSentries()){
+		
+		for(Sentry sentry: this.maze.getSentries()){
+			
 			g.setColor(Color.BLACK);
-			g.fillOval(sentry.getColumn()*(RWID), sentry.getRow()*(RHEI), RWID,RHEI);
+			g.fillOval(sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), this.RWID, this.RHEI);
 			g.setColor(Color.ORANGE);
-			int centX = sentry.getColumn()*(RWID) + RWID/2;
-			int centY = sentry.getRow()*(RHEI) + RHEI/2;		
-			for(int n = 0; n <= ARCDIST; n = n + 2 ){
-				g.drawArc(centX-ARCDIST, centY-ARCDIST, ARCDIST*2-2*n, ARCDIST*2-2*n, sentry.getDegree(), ARCWIDTH);
+			
+			int centX = sentry.getColumn()*(this.RWID) + this.RWID/2;
+			int centY = sentry.getRow()*(this.RHEI) + this.RHEI/2;		
+			
+			for(int n = 0; n <= this.ARCDIST; n = n + 2 ){
+				g.drawArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 - 2*n, this.ARCDIST*2 - 2*n, sentry.getDegree(), this.ARCWIDTH);
 				centX += 2;
 				centY += 2;
 			}
 		}
 	}
+	
+	void drawTimer(Graphics g){
+		g.setColor(Color.WHITE);
+		g.fillRect(600, 0, 120, 20);
+		g.setColor(Color.ORANGE);
+		g.setFont(new Font("Copperplate", Font.BOLD, 20));
+		g.drawString(this.timer.getTime(), 615, 18);
+	}
+	
+	/**
+	 * 
+	 */
 	@Override
-	protected void paintComponent(Graphics g){
+	protected void paintComponent(Graphics g){ // Why is this protected? private?
 		super.paintComponent(g);
-		drawFrame(g);
+		this.drawFrame(g);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void keyTyped(KeyEvent e) {	
+	}
+	
+	//Edited by Irfan.
+	/**
+	 * 
+	 */
+	@Override
+	public void keyPressed(KeyEvent e) {	//useful
+		
+		if (e.getKeyCode() == KeyEvent.VK_UP){
+			this.vert = 1;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			this.vert = -1;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+			this.horz = -1;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+			this.horz = 1;
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void keyReleased(KeyEvent e) {	
+		if(e.getKeyCode() == KeyEvent.VK_UP){
+			vert = 0;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			vert = 0;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			horz = 0;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			horz = 0;
+		}
+		
+	}
+	
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {	//useful
+
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {	
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {	
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {	
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {	
+	}
+	@Override
+	public void actionPerformed(ActionEvent e){
+		tick = (tick + 1) % TICKRATE;
+		updateGame(vert,horz,tick);
+		if(tick == 0)
+			this.timer.incrementSecond();
+		repaint();	
 	}
 }
