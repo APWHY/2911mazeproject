@@ -1,10 +1,16 @@
-package mazeGUI;
+package Default;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.Timer;
 
-public class Game implements ActionListener, MouseListener, KeyListener{
+public class Game implements ActionListener, MouseListener, KeyListener {
 	
 	
 	private JFrame mainFrame;
@@ -19,6 +25,17 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 	private final int TICKRATE = 60; //number of frames for one second
 	public Game() {
 		startWindow();
+	}
+	public static void main(String[] args){
+		Game gameWindow = new Game();
+		//System.out.println(gameWindow.mainFrame.getComponent(1));
+		gameWindow.mainFrame.setVisible(true);
+		Timer fpsTimer = new Timer(gameWindow.FPS, gameWindow);
+		fpsTimer.setRepeats(true);
+		fpsTimer.start();
+		gameWindow.mainFrame.addKeyListener(gameWindow);
+		gameWindow.mainFrame.addMouseListener(gameWindow);
+		gameWindow.mainFrame.setFocusable(true);
 	}
 	private void startWindow(){
 		//display = new Display Menu();
@@ -42,17 +59,6 @@ public class Game implements ActionListener, MouseListener, KeyListener{
 		mainFrame.getContentPane().repaint();	
 	}
 	
-	public static void main(String[] args){
-		Game gameWindow = new Game();
-		//System.out.println(gameWindow.mainFrame.getComponent(1));
-		gameWindow.mainFrame.setVisible(true);
-		Timer fpsTimer = new Timer(gameWindow.FPS, gameWindow);
-		fpsTimer.setRepeats(true);
-		fpsTimer.start();
-		gameWindow.mainFrame.addKeyListener(gameWindow);
-		gameWindow.mainFrame.addMouseListener(gameWindow);
-		gameWindow.mainFrame.setFocusable(true);
-	}
 	public Renderer getRenderer(){
 		return screen;
 	}
