@@ -10,8 +10,8 @@ public class Player {
 	private static final int START = 3;
 	private static final int EXIT  = 4;
 	private static final int SENTRY  = 5;	
-	private static final int REALLYBIGNUMBER = 36000;
 	
+	private static final int REALLYBIGNUMBER = 36000;
 	private final int SPEED = 1;
 	
 	private int xPos;
@@ -23,51 +23,78 @@ public class Player {
 	private int arcWidth;
 
 	private int userRad; //Tom -- using radius instead since it's a circle
-
 	public int caught; // just for testing get rid of this - Could use to trigger game over?
-	
-	JFrame test = new JFrame("Irfan's user");
 
-	public Player(/*Graphics g, */Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
-		//this.maze = maze;
+	/**
+	 * Constructor.
+	 * 
+	 * @param maze
+	 * @param tileWidth
+	 * @param tileHeight
+	 * @param arcDist
+	 * @param arcWidth
+	 */
+	public Player(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
+
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.arcDist = arcDist;
 		this.arcWidth = arcWidth;
 		this.userRad = tileWidth/4;
-		this.xPos = maze.getOneType(START).getCol() * tileWidth  + userRad*2;
-		this.yPos = maze.getOneType(START).getRow() * tileHeight + userRad*2;
+		this.xPos = maze.getTileType(START).getCol() * tileWidth  + userRad*2;
+		this.yPos = maze.getTileType(START).getRow() * tileHeight + userRad*2;
 		
 		this.caught = 25;
-
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param vert
+	 * @param horz
+	 * @param maze
+	 * @return
+	 */
 	public Maze move(int vert, int horz, Maze maze){
 		
 		if(vert == 1){
-			up(maze);
+			this.up(maze);
 		}
+		
 		if(vert == -1){
-			down(maze);
+			this.down(maze);
 		}
+		
 		if(horz == 1){
-			left(maze);
+			this.left(maze);
 		}
+		
 		if(horz == -1){
-			right(maze);
+			this.right(maze);
 		}
-		checkLasers(maze);
+		
+		this.checkLasers(maze);
 		return maze;
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param maze
+	 */
 	private void checkLasers(Maze maze){
+		
 		ArrayList<Sentry> sentries = maze.getSentries();
+		
 		float playerArc = 0;
 		float playerSent = 0;
 		int sentLocY = 0;
 		int sentLocX = 0;
 		float angleLow = 0;
 		float angleHigh = 0;
-		caught = 25;
+		
+		this.caught = 25;
+		
 		for(Sentry sentry: sentries){
 			//first check that the user is even within range of the sentry
 			if(Math.sqrt(Math.pow(sentry.getRow()*tileWidth+tileWidth/2-yPos,2) + Math.pow(sentry.getColumn()*tileHeight+tileHeight/2-xPos,2)) < arcDist+userRad){
@@ -78,20 +105,22 @@ public class Player {
 				playerSent = 0;
 				sentLocY = sentry.getRow()*tileWidth+tileWidth/2;
 				sentLocX = sentry.getColumn()*tileHeight+tileHeight/2;
+				
 				if(xPos-sentLocX == 0){
-					if(yPos - sentLocY < 0){
+					if (yPos - sentLocY < 0){
 						playerSent = 90;
-					}else{
+					} else {
 						playerSent = -90;
 					}
-				}else{
+				} else {
 					playerSent = (float)Math.toDegrees(Math.atan((float)(yPos-sentLocY)/(sentLocX-xPos)));
 				}
 
-				if(xPos-sentLocX < 0){//works around tan only doing -90 to 90
-				playerSent += 180;
+				if (xPos-sentLocX < 0){//works around tan only doing -90 to 90
+					playerSent += 180;
 				}
-				if(playerSent < 0){
+				
+				if (playerSent < 0){
 					playerSent += 360;
 				}
 				angleLow = (REALLYBIGNUMBER + sentry.getDegree()-playerArc) % 360;

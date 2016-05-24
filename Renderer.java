@@ -108,15 +108,15 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		for (int m = 0; m < this.maze.getSize(); m++){
 			for (int n = 0;n <  this.maze.getSize(); n++){
-				if (this.maze.getOne(n, m).getType() == FLOOR){//grey			
+				if (this.maze.getTile(n, m).getType() == FLOOR){//grey			
 					g.setColor(Color.GRAY);
-				} else if (this.maze.getOne(n, m).getType() == START){//red
+				} else if (this.maze.getTile(n, m).getType() == START){//red
 					g.setColor(Color.RED);
-				} else if (this.maze.getOne(n, m).getType() == WALL){//blue
+				} else if (this.maze.getTile(n, m).getType() == WALL){//blue
 					g.setColor(Color.BLUE);
-				} else if (this.maze.getOne(n, m).getType() == EXIT){//cyan
+				} else if (this.maze.getTile(n, m).getType() == EXIT){//cyan
 					g.setColor(Color.CYAN);
-				} else if (this.maze.getOne(n, m).getType() == EMPTY){//pink
+				} else if (this.maze.getTile(n, m).getType() == EMPTY){//pink
 					g.setColor(Color.PINK);
 				}
 				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
