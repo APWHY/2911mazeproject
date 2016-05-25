@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -7,7 +8,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -40,13 +47,18 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private final int FPS = 1000/60;
 	private final int TICKRATE = 60; //number of frames for one second
 	
-	public Renderer(int width, int height){
-		
-		this.setBackground(Color.GREEN);
+	// Buttons + Navigation
+	private JButton pause;
+	private Navigation navigator;
+	
+	public Renderer(Navigation n, int width, int height){
+		navigator = n;
+		Color bg = new Color(112,200,160);
+		this.setBackground(bg);
 		this.vert = this.horz = this.tick = 0;
 		this.WID = width;
 		this.HEI = height;
-		this.OFFSET = 30; 
+		this.OFFSET = 5; 
 		this.colSet = 150;
 		this.colFlag = 1;
 		this.setVisible(true);
@@ -63,6 +75,40 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		addKeyListener(this); // ???
 		addMouseListener(this); // ???
+		
+		
+		//adding Pause button & timer counter??
+		try {
+			pause = new JButton(createImage("pauseP.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pause.setRolloverEnabled(true);
+		
+		try {
+			pause.setRolloverIcon(createImage("pauseA.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pause.setBorderPainted(false);
+		pause.setContentAreaFilled(false);
+		
+		// Set ActionListener for pause button
+		pause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				navigator.showPause();
+			}
+		});
+		
+		Box box = Box.createHorizontalBox();
+		box.add(Box.createHorizontalStrut(725));
+		Box VerBox = Box.createVerticalBox();
+		VerBox.add(Box.createVerticalStrut(350));
+		VerBox.add(pause);
+		box.add(VerBox);
+		add(box);
 	}
 	
 	/**
@@ -257,5 +303,15 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		tick = (tick + 1) % TICKRATE;
 		updateGame(vert,horz,tick);
 		repaint();	
+	}
+	
+	protected static ImageIcon createImage(String path) throws IOException {
+		java.net.URL imgURL = Menu.class.getResource(path);
+		if (imgURL != null) {
+			return new ImageIcon(ImageIO.read(imgURL));
+		} else {
+			System.err.println("Couldn't find file: " + path);
+			return null;
+		}
 	}
 }

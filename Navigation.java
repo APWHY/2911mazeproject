@@ -12,7 +12,7 @@ public class Navigation {
 	private Settings s;
 	private HowToPlay h;
 	private HowToPlay2 h2;
-	//private PauseScreen p;
+	private Pause p;
 	//private Menu screen;
 	private Renderer screen;
 
@@ -63,7 +63,7 @@ public class Navigation {
 	 
 //shows game
 	public void showGame() {
-		screen = new Renderer(WWID,WHEI);
+		screen = new Renderer(this,WWID,WHEI);
 		screen.setVisible(true);
 		current.add(screen);
 		setCurrentFrame(screen);
@@ -105,11 +105,37 @@ public class Navigation {
 		setCurrentFrame(h2);
 		}
 	
+	/**
+	 * Opens pause screen
+	 * @param type
+	 * @param diff
+	 */
+	public void showPause() {
+		try {
+			p = new Pause(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        p.setVisible(true);
+        current.add(p);
+		setCurrentFrame(p);
+	}
+	
+	/**
+	 * Closes pause screen and returns to game
+	 */
+	public void unPause() {
+		p.setVisible(false);
+		screen.setVisible(true);
+		current.add(screen);
+		setCurrentFrame(screen);
+		
+	}
 	/***
 	 * Sets the displayed screen to the screen that is passed in
 	 * @param screen
 	 */
-	private void setCurrentFrame(Component screen) {
+	private void setCurrentFrame(Component view) {
 		//you don't want to keep adding stuff to the jframe because you'll eventually have 29384729347 jpanels in the jframe
 		//instead add all the jpanels to the jframe in the constructor and just toggle visibility --Tom
 		for(Component c : current.getContentPane().getComponents()){
@@ -117,9 +143,9 @@ public class Navigation {
 			c.setFocusable(false);
 		}
 
-		screen.setFocusable(true);
-		screen.setVisible(true);
-		screen.requestFocusInWindow();
+		view.setFocusable(true);
+		view.setVisible(true);
+		view.requestFocusInWindow();
 	}
 
 
