@@ -15,7 +15,7 @@ public class Maze {
 	
 	// Maze generator constants
 	private static final float CYCLECHANCE = (float) 0.75;
-	private static final int NUMSEN = 30; // Numbers of Sentries - Andy
+	private static final int NUMSEN = 3; // Numbers of Sentries - Andy
 	private static final int SENTRYSPACE = 3; // Space in between Sentries
 	
 	private Tile[][] maze;
@@ -47,17 +47,105 @@ public class Maze {
 		addSentries(NUMSEN);
 		addKey(maze, size); // Adding the key to the maze - Andy
 		keyStatus = false;
+		findSprites();
 		exit = getTileType(EXIT);
-		getTileType(EXIT).setType(WALL);
+		getTileType(EXIT).setType(FLOOR);
 	}
 	
+	//this method figures out which sprite should be displayed for each tile
+	//the sprites themselves are in a type BufferedImage [][] in Renderer
+	//but the logic should be done in maze.java while the images stored 
+	//in renderer because I don't want to store images outside of 
+	//renderer. It also saves space
+	private void findSprites() {
+		
+		Random x = new Random();
+		int vert, avert, ahorz, horz = 0;
+		int triggers = 0;
+		for (int n = 0; n < size; n++){
+			for (int m = 0; m < size; m++){
+				vert = horz = avert = ahorz = 0;
+				triggers = 0;
+				if (maze[n][m].getType() == FLOOR || maze[n][m].getType() == START || maze[n][m].getType() == EXIT ){
+					maze[n][m].setImgRow(5);
+					maze[n][m].setImgCol(x.nextInt(3));
+				}else if (maze[n][m].getType() == WALL ){
+					if(getN(maze[n][m]) == null ||(getN(maze[n][m]) != null && getN(maze[n][m]).getType() != WALL && getN(maze[n][m]).getType() != SENTRY)){
+						vert++;
+						avert++;
+						triggers++;
+					}
+					if(getS(maze[n][m]) == null ||(getS(maze[n][m]) != null && getS(maze[n][m]).getType() != WALL && getS(maze[n][m]).getType() != SENTRY )){
+						vert--;
+						avert++;
+						triggers++;
+					}
+					if(getE(maze[n][m]) == null ||(getE(maze[n][m]) != null && getE(maze[n][m]).getType() != WALL && getE(maze[n][m]).getType() != SENTRY)){
+						horz++;
+						ahorz++;
+						triggers++;
+					}
+					if(getW(maze[n][m]) == null ||(getW(maze[n][m]) != null && getW(maze[n][m]).getType() != WALL && getW(maze[n][m]).getType() != SENTRY )){
+						horz--;
+						ahorz++;
+						triggers++;
+					}
+					maze[n][m].setImgRow(triggers % 4);//just because when triggers = 4 I want imgrow = 0
+					
+					switch (triggers){
+					case 0: maze[n][m].setImgCol(0);
+							break;
+					case 1: maze[n][m].setImgCol(2*horz + vert + 2);						
+							break;
+					case 2: maze[n][m].setImgCol(2*horz + vert + avert - ahorz + 3);
+							break;		
+					case 3: maze[n][m].setImgCol(2*horz + vert + 2);
+							break;
+					case 4: maze[n][m].setImgCol(1);
+							break;
+					}
+				}else if (maze[n][m].getType() == EMPTY){
+					if(getNW(maze[n][m]) == null || getNW(maze[n][m]) != null && (getNW(maze[n][m]).getType() != WALL && getNW(maze[n][m]).getType() != SENTRY && getNW(maze[n][m]).getType() != EMPTY)){
+						triggers++;
+					}if(getNE(maze[n][m]) == null ||getNE(maze[n][m]) != null && (getNE(maze[n][m]).getType() != WALL && getNE(maze[n][m]).getType() != SENTRY && getNE(maze[n][m]).getType() != EMPTY)){
+						triggers++;
+					}if(getSW(maze[n][m]) == null ||getSW(maze[n][m]) != null && (getSW(maze[n][m]).getType() != WALL && getSW(maze[n][m]).getType() != SENTRY && getSW(maze[n][m]).getType() != EMPTY)){
+						triggers++;
+					}if(getSE(maze[n][m]) == null ||getSE(maze[n][m]) != null && (getSE(maze[n][m]).getType() != WALL && getSE(maze[n][m]).getType() != SENTRY && getSE(maze[n][m]).getType() != EMPTY)){
+						triggers++;
+					}
+					maze[n][m].setImgRow(4);
+					maze[n][m].setImgCol((triggers)%4);	
+//					if (maze[n][m].getImgCol() < 0){
+//						System.out.println(triggers + "and col " + maze[n][m].getImgCol()); 
+//					}
+				}else if (maze[n][m].getType() == KEY){
+					maze[n][m].setImgRow(0);
+					maze[n][m].setImgCol(2);	
+				}
+				//System.out.println(maze[n][m].getImgRow() + "and col " + maze[n][m].getImgCol()); 	
+			}
+		}
+		
+	}
+
 	public void keyOff(){
-		getTile(exit.getCol(), exit.getRow()).setType(EXIT);
-		getTileType(KEY).setType(FLOOR);
+		Tile temp = getTile(exit.getCol(), exit.getRow());
+		temp.setType(EXIT);
+		temp.setImgRow(0);
+		temp.setImgCol(3);
+		temp = getTileType(KEY);
+		temp.setType(FLOOR);
+		temp.setImgRow(5);
+		temp.setImgCol(3);
 		keyStatus = true;
 	}
 	
-	
+	public void activateShrine(){
+		exit.setImgRow(0);
+		exit.setImgCol(4);
+		//END THE GAME!!!
+	}
 	
 	public void setKeyStatus(boolean keyStatus) {
 		this.keyStatus = keyStatus;
@@ -286,7 +374,6 @@ public class Maze {
 				}
 			}
 		}
-
 		if (count > 15){
 			return false;
 		} else {
@@ -301,7 +388,7 @@ public class Maze {
 	 * @return Tile above current Tile 
 	 */
 	public Tile getN(Tile tile){
-		
+		if(tile == null) return null;
 		if (tile.getRow() > 0){
 			return maze[tile.getCol()][tile.getRow()-1];
 		} else {
@@ -316,7 +403,7 @@ public class Maze {
 	 * @return Tile below current Tile
 	 */
 	public Tile getS(Tile tile){
-		
+		if(tile == null) return null;
 		if (tile.getRow() < size-1){
 			return maze[tile.getCol()][tile.getRow()+1];
 		} else {
@@ -331,6 +418,7 @@ public class Maze {
 	 * @return Tile to the right of current Tile
 	 */
 	public Tile getE(Tile tile){
+		if(tile == null) return null;
 		if (tile.getCol() < size-1){
 			return maze[tile.getCol()+1][tile.getRow()];
 		} else {
@@ -345,6 +433,7 @@ public class Maze {
 	 * @return Tile to the left current Tile
 	 */
 	public Tile getW(Tile tile){
+		if(tile == null) return null;
 		if (tile.getCol() > 0){
 			return maze[tile.getCol()-1][tile.getRow()];
 		} else {

@@ -8,7 +8,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -28,11 +30,13 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	// Graphics related variables
 	BufferedImage canvas;
+	BufferedImage[][] sprites;
 	private int vert, horz,tick;
 	private int WID,HEI,OFFSET;
 	
 	// Constants
 	private final int RWID = 24, RHEI = 24; // Must be divisible by 4
+	private final int SPRITESIZE = 16;//size of the sprites
 	private final int MAZESIZE = 30;
 	
 	private static final int EMPTY = 0;
@@ -66,6 +70,12 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		this.setVisible(true);
 		this.setFocusable(true);
 		this.maze = new Maze(this.MAZESIZE);
+		try {
+			this.sprites = getSprites();
+		} catch (IOException e1) {
+			// incase the sprites aren't there for some reason idk
+			e1.printStackTrace();
+		}
 		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
 		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
 		//Tom -- we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
@@ -153,7 +163,6 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	 * @param g
 	 */
 	private void drawMaze(Graphics g){
-		
 		for (int m = 0; m < this.maze.getSize(); m++){
 			for (int n = 0;n <  this.maze.getSize(); n++){
 				if (this.maze.getTile(n, m).getType() == FLOOR){//grey			
@@ -170,7 +179,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 					g.setColor(Color.YELLOW);
 				}
 				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
-				g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan
+				//g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan
+				g.drawImage(sprites[maze.getTile(n, m).getImgCol()][maze.getTile(n, m).getImgRow()], n*(this.RWID), m*(this.RHEI), (n+1)*(this.RWID), (m+1)*(this.RHEI), 1,1, 15,15, this);
+				//g.drawImage(sprites[6][2], n*(this.RWID), m*(this.RHEI), (n+1)*(this.RWID), (m+1)*(this.RHEI), 1,1, 16,16, this);
 			}
 		}
 		
@@ -224,6 +235,26 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			}
 		}
 	}
+	
+	
+	private BufferedImage[][] getSprites() throws IOException{
+		BufferedImage bigImg = ImageIO.read(new File("fixedspritesdebug.bmp"));
+		int spriteCols = 7;
+		int spriteRows = 6;
+		
+		BufferedImage[][] newSprites = new BufferedImage[spriteCols][spriteRows];
+        for (int i = 0; i < spriteRows; i++)
+        {
+            for (int j = 0; j < spriteCols; j++)
+            {
+                newSprites[j][i] = bigImg.getSubimage(j * SPRITESIZE, i * SPRITESIZE, SPRITESIZE, SPRITESIZE);
+            }
+        }
+		
+		
+		return newSprites;
+	}
+	
 	
 	/**
 	 * 

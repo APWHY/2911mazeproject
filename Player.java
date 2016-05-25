@@ -75,6 +75,8 @@ public class Player {
 		}
 		if(!maze.isKeyStatus()){
 			this.checkKey(maze, xPos, yPos);
+		}else{
+			this.checkExit(maze, xPos, yPos);
 		}
 		this.checkLasers(maze);
 		return maze;
@@ -186,6 +188,18 @@ public class Player {
 				|| maze.tileType(bottomEdge, rightEdge) == KEY
 				|| maze.tileType(bottomEdge, leftEdge)  == KEY) 
 			maze.keyOff();//this is pretty ugly but it's the easiest way to do it
+	}
+	private void checkExit(Maze maze, int x, int y){
+		int leftEdge = (x - userRad)/tileWidth;  //Will round down
+		int topEdge = (y- userRad)/tileHeight; //if not perfectly divisible. :)
+		int rightEdge = (x + userRad)/tileWidth ;
+		int bottomEdge = (y + userRad)/tileHeight ; 
+		
+		if(maze.tileType(topEdge, rightEdge) == EXIT
+				|| maze.tileType(topEdge, leftEdge)     == EXIT
+				|| maze.tileType(bottomEdge, rightEdge) == EXIT
+				|| maze.tileType(bottomEdge, leftEdge)  == EXIT) 
+			maze.activateShrine();//and the winner for cheesiest function name goes to....
 	}
 	
 	private boolean tileIsWall(Maze maze, int x, int y){

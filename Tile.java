@@ -1,3 +1,4 @@
+
 public class Tile {
 
 	// Constants -- Might not need as type is set during maze generation.
@@ -11,6 +12,8 @@ public class Tile {
 	private int col;
 	private Tile prev; // Not currently in use
 	private int type; // Not used by own class
+	private int imgCol;
+	private int imgRow;
 	
 	/**
 	 * Constructor.
@@ -23,8 +26,36 @@ public class Tile {
 		this.col = col;
 		this.row = row;
 		this.type = EMPTY;		
+		this.imgCol = 0;
+		this.imgRow = 0;
 
 	}
+
+
+
+	public int getImgCol() {
+		return imgCol;
+	}
+
+
+
+	public void setImgCol(int imgCol) {
+		this.imgCol = imgCol;
+	}
+
+
+
+	public int getImgRow() {
+		return imgRow;
+	}
+
+
+
+	public void setImgRow(int imgRow) {
+		this.imgRow = imgRow;
+	}
+
+
 
 	/**
 	 * Set Tile type.
