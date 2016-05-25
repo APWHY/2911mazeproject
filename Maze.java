@@ -22,6 +22,7 @@ public class Maze {
 	private ArrayList<Sentry> sentries;
 	private boolean keyStatus; // Currently unused
 	private int size;
+	private Tile exit;
 
 	/**
 	 * Constructor.
@@ -46,8 +47,22 @@ public class Maze {
 		addSentries(NUMSEN);
 		addKey(maze, size); // Adding the key to the maze - Andy
 		keyStatus = false;
+		exit = getTileType(EXIT);
+		getTileType(EXIT).setType(WALL);
 	}
 	
+	public void keyOff(){
+		getTile(exit.getCol(), exit.getRow()).setType(EXIT);
+		getTileType(KEY).setType(FLOOR);
+		keyStatus = true;
+	}
+	
+	
+	
+	public void setKeyStatus(boolean keyStatus) {
+		this.keyStatus = keyStatus;
+	}
+
 	//Adding sentries function - Andy
 	/**
 	 * Adds instances of the Sentry class to a maze.
@@ -109,7 +124,7 @@ public class Maze {
 	
 	public boolean isCorner(Tile tile) {
 		int count = 0;
-		if (getN(tile) != null && getN(tile).getType() == FLOOR) {
+		if (getN(tile) != null && getN(tile).getType() == FLOOR) {// need to include null check because getN returns null if you check outside the maze -- tom
 			count++;
 		}
 		if (getS(tile) != null && getS(tile).getType() == FLOOR) {

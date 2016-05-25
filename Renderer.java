@@ -40,6 +40,8 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private static final int WALL  = 2;
 	private static final int START = 3;
 	private static final int EXIT  = 4;
+	private static final int SENTRY  = 5;
+	private static final int KEY = 6;
 	
 	private final int ARCDIST = (int)(RWID*1.3);
 	private final int ARCWIDTH = 45;
@@ -164,6 +166,8 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 					g.setColor(Color.CYAN);
 				} else if (this.maze.getTile(n, m).getType() == EMPTY){//pink
 					g.setColor(Color.PINK);
+				}else if (this.maze.getTile(n, m).getType() == KEY){//yellow
+					g.setColor(Color.YELLOW);
 				}
 				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
 				g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan

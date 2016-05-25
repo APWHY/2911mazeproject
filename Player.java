@@ -73,7 +73,9 @@ public class Player {
 		if(horz == -1){
 			this.right(maze);
 		}
-		
+		if(!maze.isKeyStatus()){
+			this.checkKey(maze, xPos, yPos);
+		}
 		this.checkLasers(maze);
 		return maze;
 	}
@@ -145,10 +147,7 @@ public class Player {
 			yPos -= 1;
 		if(tileIsWall(maze, xPos, yPos))
 			yPos++;
-		// if there's a key above - Andy
-		if(maze.getN(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
-			maze.getN(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
-		}
+
 	}
 
 	public void down(Maze maze) {
@@ -156,10 +155,7 @@ public class Player {
 			yPos += 1;
 		if(tileIsWall(maze, xPos, yPos))
 			yPos--;
-		// if there's a key below - Andy
-		if(maze.getS(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
-			maze.getS(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
-		}
+
 	}
 
 	public void right(Maze maze) {
@@ -167,23 +163,30 @@ public class Player {
 			xPos += 1;
 		if(tileIsWall(maze, xPos, yPos))
 			xPos--;
-		// if there's a key in the right - Andy
-		if(maze.getE(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
-			maze.getE(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
-		}
+
 	}
 
 	public void left(Maze maze) {
 		
-		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) xPos -= 1;
+		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) 
+			xPos -= 1;
 		
-		if(tileIsWall(maze, xPos, yPos)) xPos++;
-		// if there's a key in the left - Andy
-		if(maze.getW(maze.getTile(this.xPos, this.yPos)).getType() == KEY) {
-			maze.getW(maze.getTile(this.xPos, this.yPos)).setType(FLOOR);
-		}
+		if(tileIsWall(maze, xPos, yPos)) 
+			xPos++;
+
 	}
-	
+	private void checkKey(Maze maze, int x, int y){
+		int leftEdge = (x - userRad)/tileWidth;  //Will round down
+		int topEdge = (y- userRad)/tileHeight; //if not perfectly divisible. :)
+		int rightEdge = (x + userRad)/tileWidth ;
+		int bottomEdge = (y + userRad)/tileHeight ; 
+		
+		if(maze.tileType(topEdge, rightEdge) == KEY
+				|| maze.tileType(topEdge, leftEdge)     == KEY
+				|| maze.tileType(bottomEdge, rightEdge) == KEY
+				|| maze.tileType(bottomEdge, leftEdge)  == KEY) 
+			maze.keyOff();//this is pretty ugly but it's the easiest way to do it
+	}
 	
 	private boolean tileIsWall(Maze maze, int x, int y){
 		//checks that the player doesn't leave the maze
@@ -194,7 +197,7 @@ public class Player {
 		int topEdge = (y- userRad)/tileHeight; //if not perfectly divisible. :)
 		int rightEdge = (x + userRad)/tileWidth ;
 		int bottomEdge = (y + userRad)/tileHeight ; 
-		
+	
 		if(maze.tileType(topEdge, rightEdge) != WALL
 				&& maze.tileType(topEdge, leftEdge)     != WALL
 				&& maze.tileType(bottomEdge, rightEdge) != WALL
