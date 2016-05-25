@@ -11,7 +11,6 @@ public class Navigation {
 	private Menu m;
 	private Settings s;
 	private HowToPlay h;
-	private HowToPlay2 h2;
 	private Pause p;
 	//private Menu screen;
 	private Renderer screen;
@@ -93,17 +92,6 @@ public class Navigation {
 		setCurrentFrame(h);
 	}
 	
-	//Shows how to play screen
-	public void showHowToPlay2() {
-		try {
-			h2 = new HowToPlay2(this);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		h2.setVisible(true);
-        current.add(h2);
-		setCurrentFrame(h2);
-		}
 	
 	/**
 	 * Opens pause screen
