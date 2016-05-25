@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -246,24 +247,31 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		for(Sentry sentry: this.maze.getSentries()){
 			
-			g.setColor(Color.BLACK);
-			g.fillOval(sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), this.RWID, this.RHEI);
+			//g.setColor(Color.BLACK);
+			g.drawImage(sprites[5][0], sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), (1+sentry.getColumn())*(this.RWID), (1+sentry.getRow())*(this.RHEI), 1,1, 15,15, this);
+			//g.fillOval(sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), this.RWID, this.RHEI);
 			g.setColor(Color.ORANGE);
 			
 			int centX = sentry.getColumn()*(this.RWID) + this.RWID/2;
 			int centY = sentry.getRow()*(this.RHEI) + this.RHEI/2;		
-			
-			for(int n = 0; n <= this.ARCDIST; n = n + 2 ){
-				g.drawArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 - 2*n, this.ARCDIST*2 - 2*n, sentry.getDegree(), this.ARCWIDTH);
-				centX += 2;
-				centY += 2;
+//			g.fillArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 , this.ARCDIST*2 , sentry.getDegree(), this.ARCWIDTH);
+//			g.setColor(Color.BLACK);
+			for(int n = 0; n <= this.ARCDIST; n = n + 4 ){
+				g.fillArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 - 2*n, this.ARCDIST*2 - 2*n, sentry.getDegree(), this.ARCWIDTH);
+				centX += 4;
+				centY += 4;
+				if (g.getColor() == Color.ORANGE){
+					g.setColor(Color.RED);
+				}else{
+					g.setColor(Color.ORANGE);
+				}
 			}
 		}
 	}
 	
 	
 	private BufferedImage[][] getSprites() throws IOException{
-		BufferedImage bigImg = ImageIO.read(new File("fixedspritesdebug.bmp"));
+		BufferedImage bigImg = ImageIO.read(new File("fixedsprites.bmp"));
 		int spriteCols = 7;
 		int spriteRows = 6;
 		
@@ -367,6 +375,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			this.timerDisplay.setText(timerPadding + this.timer.getTime());
 			this.timerDisplay.repaint();
 		}
+		
 		repaint();	
 	}
 	

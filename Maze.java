@@ -70,22 +70,22 @@ public class Maze {
 					maze[n][m].setImgRow(5);
 					maze[n][m].setImgCol(x.nextInt(3));
 				}else if (maze[n][m].getType() == WALL ){
-					if(getN(maze[n][m]) == null ||(getN(maze[n][m]) != null && getN(maze[n][m]).getType() != WALL && getN(maze[n][m]).getType() != SENTRY)){
+					if(getN(maze[n][m]) == null ||(getN(maze[n][m]) != null && getN(maze[n][m]).getType() != WALL)){
 						vert++;
 						avert++;
 						triggers++;
 					}
-					if(getS(maze[n][m]) == null ||(getS(maze[n][m]) != null && getS(maze[n][m]).getType() != WALL && getS(maze[n][m]).getType() != SENTRY )){
+					if(getS(maze[n][m]) == null ||(getS(maze[n][m]) != null && getS(maze[n][m]).getType() != WALL)){
 						vert--;
 						avert++;
 						triggers++;
 					}
-					if(getE(maze[n][m]) == null ||(getE(maze[n][m]) != null && getE(maze[n][m]).getType() != WALL && getE(maze[n][m]).getType() != SENTRY)){
+					if(getE(maze[n][m]) == null ||(getE(maze[n][m]) != null && getE(maze[n][m]).getType() != WALL)){
 						horz++;
 						ahorz++;
 						triggers++;
 					}
-					if(getW(maze[n][m]) == null ||(getW(maze[n][m]) != null && getW(maze[n][m]).getType() != WALL && getW(maze[n][m]).getType() != SENTRY )){
+					if(getW(maze[n][m]) == null ||(getW(maze[n][m]) != null && getW(maze[n][m]).getType() != WALL)){
 						horz--;
 						ahorz++;
 						triggers++;
@@ -122,6 +122,9 @@ public class Maze {
 				}else if (maze[n][m].getType() == KEY){
 					maze[n][m].setImgRow(0);
 					maze[n][m].setImgCol(2);	
+				}else if (maze[n][m].getType() == SENTRY){
+					maze[n][m].setImgRow(0);
+					maze[n][m].setImgCol(5);	
 				}
 				//System.out.println(maze[n][m].getImgRow() + "and col " + maze[n][m].getImgCol()); 	
 			}
