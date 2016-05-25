@@ -55,6 +55,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	// Buttons + Navigation
 	private JButton pause;
+	private TimerDisplay timer;
+	private JLabel timerDisplay;
+	private String timerPadding = "          "; //Can't get struts to cooperate :(
 	private Navigation navigator;
 	
 	public Renderer(Navigation n, int width, int height){
@@ -70,6 +73,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		this.setVisible(true);
 		this.setFocusable(true);
 		this.maze = new Maze(this.MAZESIZE);
+		this.timer = new TimerDisplay();
 		try {
 			this.sprites = getSprites();
 		} catch (IOException e1) {
@@ -114,11 +118,32 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			}
 		});
 		
+		timerDisplay = new JLabel();
+		timerDisplay.setText(timerPadding + this.timer.getTime());
+		timerDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
+		timerDisplay.setForeground(Color.DARK_GRAY);
+		//timerDisplay.setBackground(Color.CYAN);
+		//timerDisplay.setOpaque(true);
+		timerDisplay.setVisible(true);
+		//timerDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+		//timerDisplay.setLocation(100, 100);
+		//timerDisplay.setBounds(200, 200, 100, 100);
+		//add(timerDisplay);
+		//timerDisplay.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		
+		
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalStrut(725));
+		
 		Box VerBox = Box.createVerticalBox();
+
+		VerBox.add(Box.createVerticalStrut(10));
+		//VerBox.add(Box.createHorizontalStrut(100)); //added whitespace padding instead.
+		VerBox.add(timerDisplay);
+		
 		VerBox.add(Box.createVerticalStrut(350));
 		VerBox.add(pause);
+	
 		box.add(VerBox);
 		add(box);
 	}
@@ -337,6 +362,11 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	public void actionPerformed(ActionEvent e){
 		tick = (tick + 1) % TICKRATE;
 		updateGame(vert,horz,tick);
+		if(tick == 0){
+			this.timer.incrementSecond();
+			this.timerDisplay.setText(timerPadding + this.timer.getTime());
+			this.timerDisplay.repaint();
+		}
 		repaint();	
 	}
 	
