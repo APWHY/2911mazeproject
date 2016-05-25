@@ -10,7 +10,8 @@ public class Navigation {
 	private JFrame current;
 	private Menu m;
 	private Settings s;
-	//private Help h;
+	private HowToPlay h;
+	private HowToPlay2 h2;
 	//private PauseScreen p;
 	//private Menu screen;
 	private Renderer screen;
@@ -36,7 +37,7 @@ public class Navigation {
 		current.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//lets us close the window        
 		current.setBackground(Color.GREEN);
 
-		current.setVisible(true);
+		current.setVisible(true); 
 		
 		//screen = new Renderer(WWID,WHEI);
 		m = new Menu(this);
@@ -79,16 +80,30 @@ public class Navigation {
 		current.add(s);
 		setCurrentFrame(s);
 	}
-/*
 	
 	//Shows how to play screen
-	public void runHowToPlay() {
-		h = new HowToPlay(this);
-        h.setVisible(true);
+	public void showHowToPlay() {
+		try {
+			h = new HowToPlay(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		h.setVisible(true);
+        current.add(h);
 		setCurrentFrame(h);
 	}
 	
-	*/
+	//Shows how to play screen
+	public void showHowToPlay2() {
+		try {
+			h2 = new HowToPlay2(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		h2.setVisible(true);
+        current.add(h2);
+		setCurrentFrame(h2);
+		}
 	
 	/***
 	 * Sets the displayed screen to the screen that is passed in

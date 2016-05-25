@@ -50,10 +50,12 @@ public class Menu extends JPanel{
 		settings.setBackground(Color.white);
 		howtoplay.setBackground(Color.white);
 
+		/*
 		// Set action commands
 		play.setActionCommand("Play");
 		settings.setActionCommand("Settings");
 		howtoplay.setActionCommand("HowToPlay");
+		*/
 		
 		// Set ActionListener for play button
 		play.addActionListener(new ActionListener() {
@@ -73,15 +75,6 @@ public class Menu extends JPanel{
 			}
 		});
 		
-		// Set ActionListener for howtoplay button
-		howtoplay.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				// Call Navigator to show how to play
-			}
-		});	
-				
 		// Set Alignment
 		play.setAlignmentX(CENTER_ALIGNMENT);
 		settings.setAlignmentX(CENTER_ALIGNMENT);
@@ -104,12 +97,19 @@ public class Menu extends JPanel{
         box.add(settings);
         box.add(Box.createVerticalStrut(40));
         box.add(howtoplay);
+        // Adding box containing components
         add(box); 
         
-        setBackground(Color.white);
-        
-        // Adding box containing components
-        add(box, JPanel.CENTER_ALIGNMENT);
+		// Set ActionListener for howtoplay button
+		howtoplay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				navigator.showHowToPlay();
+			}
+		});	
+				
+		
 	}
 	
 	protected static ImageIcon createImage(String path) throws IOException {
