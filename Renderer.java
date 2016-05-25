@@ -1,5 +1,7 @@
-package Default;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -9,8 +11,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
@@ -36,6 +45,8 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private static final int WALL  = 2;
 	private static final int START = 3;
 	private static final int EXIT  = 4;
+	private static final int SENTRY  = 5;
+	private static final int KEY = 6;
 	
 	private final int ARCDIST = (int)(RWID*1.3);
 	private final int ARCWIDTH = 45;
@@ -43,13 +54,20 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private final int FPS = 1000/60;
 	private final int TICKRATE = 60; //number of frames for one second
 	
-	public Renderer(int width, int height){
-		
-		this.setBackground(Color.GREEN);
+	// Buttons + Navigation
+	private JButton pause;
+	private JLabel timerDisplay;
+	private String timerPadding = "          "; //Can't get struts to cooperate :(
+	private Navigation navigator;
+	
+	public Renderer(Navigation n, int width, int height){
+		navigator = n;
+		Color bg = new Color(112,200,160);
+		this.setBackground(bg);
 		this.vert = this.horz = this.tick = 0;
 		this.WID = width;
 		this.HEI = height;
-		this.OFFSET = 30; 
+		this.OFFSET = 5; 
 		this.colSet = 150;
 		this.colFlag = 1;
 		this.setVisible(true);
@@ -57,9 +75,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		this.maze = new Maze(this.MAZESIZE);
 		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
 		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
-		this.timer = new TimerDisplay();
 		//Tom -- we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
 		//we also don't need framewidth and frameheight for the same reasons
+		this.timer = new TimerDisplay();
 		
 		Timer fpsTimer = new Timer(FPS, this);
 		fpsTimer.setRepeats(true);
@@ -67,6 +85,62 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		addKeyListener(this); // ???
 		addMouseListener(this); // ???
+		
+		
+		//adding Pause button & timer counter??
+		try {
+			pause = new JButton(createImage("pauseP.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pause.setRolloverEnabled(true);
+		
+		try {
+			pause.setRolloverIcon(createImage("pauseA.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pause.setBorderPainted(false);
+		pause.setContentAreaFilled(false);
+		
+		// Set ActionListener for pause button
+		pause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				navigator.showPause();
+			}
+		});
+		
+		timerDisplay = new JLabel();
+		timerDisplay.setText(timerPadding + this.timer.getTime());
+		timerDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
+		timerDisplay.setForeground(Color.DARK_GRAY);
+		//timerDisplay.setBackground(Color.CYAN);
+		//timerDisplay.setOpaque(true);
+		timerDisplay.setVisible(true);
+		//timerDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+		//timerDisplay.setLocation(100, 100);
+		//timerDisplay.setBounds(200, 200, 100, 100);
+		//add(timerDisplay);
+		//timerDisplay.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		
+		
+		Box box = Box.createHorizontalBox();
+		box.add(Box.createHorizontalStrut(725));
+		
+		Box VerBox = Box.createVerticalBox();
+
+		VerBox.add(Box.createVerticalStrut(10));
+		//VerBox.add(Box.createHorizontalStrut(100)); //added whitespace padding instead.
+		VerBox.add(timerDisplay);
+		
+		VerBox.add(Box.createVerticalStrut(350));
+		VerBox.add(pause);
+	
+		//box.add(timerBox);
+		box.add(VerBox);
+		add(box);
 	}
 	
 	/**
@@ -99,9 +173,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		drawMaze(cg);
 		drawSentries(cg);
 		drawPlayer(cg);
-		drawTimer(cg);
 		g.drawImage(canvas, OFFSET, OFFSET, null);
-
 	}
 	
 	/**
@@ -113,16 +185,18 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		for (int m = 0; m < this.maze.getSize(); m++){
 			for (int n = 0;n <  this.maze.getSize(); n++){
-				if (this.maze.getOne(n, m).getType() == FLOOR){//grey			
+				if (this.maze.getTile(n, m).getType() == FLOOR){//grey			
 					g.setColor(Color.GRAY);
-				} else if (this.maze.getOne(n, m).getType() == START){//red
+				} else if (this.maze.getTile(n, m).getType() == START){//red
 					g.setColor(Color.RED);
-				} else if (this.maze.getOne(n, m).getType() == WALL){//blue
+				} else if (this.maze.getTile(n, m).getType() == WALL){//blue
 					g.setColor(Color.BLUE);
-				} else if (this.maze.getOne(n, m).getType() == EXIT){//cyan
+				} else if (this.maze.getTile(n, m).getType() == EXIT){//cyan
 					g.setColor(Color.CYAN);
-				} else if (this.maze.getOne(n, m).getType() == EMPTY){//pink
+				} else if (this.maze.getTile(n, m).getType() == EMPTY){//pink
 					g.setColor(Color.PINK);
+				}else if (this.maze.getTile(n, m).getType() == KEY){//yellow
+					g.setColor(Color.YELLOW);
 				}
 				//g.fillRect(OFFSET+n*(RWID+1), OFFSET+m*(RHEI+1), RWID,RHEI);
 				g.fillRect(n*(this.RWID), m*(this.RHEI), this.RWID, this.RHEI); //Irfan
@@ -140,7 +214,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		}
 	}
 	
-	//Edited by Irfan
+	
 	/**
 	 * 
 	 * @param g
@@ -178,14 +252,6 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 				centY += 2;
 			}
 		}
-	}
-	
-	void drawTimer(Graphics g){
-		g.setColor(Color.WHITE);
-		g.fillRect(600, 0, 120, 20);
-		g.setColor(Color.ORANGE);
-		g.setFont(new Font("Copperplate", Font.BOLD, 20));
-		g.drawString(this.timer.getTime(), 615, 18);
 	}
 	
 	/**
@@ -269,8 +335,21 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	public void actionPerformed(ActionEvent e){
 		tick = (tick + 1) % TICKRATE;
 		updateGame(vert,horz,tick);
-		if(tick == 0)
+		if(tick == 0){
 			this.timer.incrementSecond();
+			this.timerDisplay.setText(timerPadding + this.timer.getTime());
+			this.timerDisplay.repaint();
+		}
 		repaint();	
+	}
+	
+	protected static ImageIcon createImage(String path) throws IOException {
+		java.net.URL imgURL = Menu.class.getResource(path);
+		if (imgURL != null) {
+			return new ImageIcon(ImageIO.read(imgURL));
+		} else {
+			System.err.println("Couldn't find file: " + path);
+			return null;
+		}
 	}
 }
