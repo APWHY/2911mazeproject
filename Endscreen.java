@@ -19,10 +19,12 @@ public class Endscreen extends JPanel{
 	private JButton reset;
 	private JButton menu;
 	private Navigation navigator;
+	private TimerDisplay t;
 	
-	public Endscreen(Navigation n) throws IOException {
+	public Endscreen(Navigation n, TimerDisplay timer) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
+		t = timer;
 		// Create buttons with icons in them + hover images
 		reset = new JButton(createImage("replayP.png"));
 		reset.setRolloverEnabled(true);
