@@ -16,6 +16,9 @@ public class Navigation {
 	//private Menu screen;
 	private Renderer screen;
 
+	int numSen;
+	int diff;
+	
 	//PUT THE MAZE AND PLAYER IN RENDERER
 	
 	private final int WWID = 1000;//window width and height
@@ -26,12 +29,32 @@ public class Navigation {
 	public boolean paused = false;
 
 	public Navigation() throws IOException {
+		numSen = 3; //just some default starting variables 
+		diff = 15;
 		startWindow();
 	}
 	
+	public int getNumSen() {
+		return numSen;
+	}
+
+	public void setNumSen(int numSen) {
+		this.numSen = numSen;
+		showSettings();
+	}
+
+	public int getDiff() {
+		return diff;
+	}
+
+	public void setDiff(int diff) {
+		this.diff = diff;
+		showSettings();
+	}
+
 	private void startWindow() throws IOException{
 		//display = new Display Menu();
-
+		
 		current = new JFrame("The Amazing Maze");
 		current.setSize(WWID,WHEI);//since we have pack the size shouldn't matter 
 		current.setResizable(false);
@@ -65,7 +88,7 @@ public class Navigation {
 	 
 //shows game
 	public void showGame() {
-		screen = new Renderer(this,WWID,WHEI);
+		screen = new Renderer(this,WWID,WHEI, numSen, diff);
 		screen.setVisible(true);
 		current.add(screen);
 		setCurrentFrame(screen);

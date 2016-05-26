@@ -61,7 +61,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private String timerPadding = "          "; //Can't get struts to cooperate :(
 	private Navigation navigator;
 	
-	public Renderer(Navigation n, int width, int height){
+	public Renderer(Navigation n, int width, int height,int numSen, int diff){
 		navigator = n;
 		Color bg = new Color(112,200,160);
 		Color bg2 = new Color(172,230,250);
@@ -74,7 +74,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		this.colFlag = 1;
 		this.setVisible(true);
 		this.setFocusable(true);
-		this.maze = new Maze(this.MAZESIZE);
+		this.maze = new Maze(this.MAZESIZE, numSen, diff);
 		this.timer = new TimerDisplay();
 		try {
 			this.sprites = getSprites();

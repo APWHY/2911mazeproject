@@ -15,7 +15,8 @@ public class Maze {
 	
 	// Maze generator constants
 	private static final float CYCLECHANCE = (float) 0.75;
-	private static final int NUMSEN = 3; // Numbers of Sentries - Andy
+	private  int DIFFICULTY = 15; //these are constant once the game starts-- they are changed in settings.java
+	private  int NUMSEN = 3;
 	private static final int SENTRYSPACE = 3; // Space in between Sentries
 	
 	private Tile[][] maze;
@@ -29,11 +30,13 @@ public class Maze {
 	 * 
 	 * @param size Maze size
 	 */
-	public Maze(int size){
+	public Maze(int size, int numSen, int diff){
 		
 		this.size = size;
 		this.maze = new Tile[size][size];
 		this.sentries = new ArrayList<Sentry>();
+		NUMSEN = numSen;
+		DIFFICULTY = diff;
 		
 		do { // Initialize maze grid
 			for (int n = 0; n < size; n++){
@@ -377,7 +380,7 @@ public class Maze {
 				}
 			}
 		}
-		if (count > 15){
+		if (count > DIFFICULTY){
 			return false;
 		} else {
 			return true;
