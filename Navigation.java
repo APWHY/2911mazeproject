@@ -21,6 +21,8 @@ public class Navigation {
 	private final int WHEI = 800;
 	private final int FPS = 1000/60;
 
+	//pause timer
+	public bool paused = true;
 
 	public Navigation() throws IOException {
 		startWindow();
@@ -107,6 +109,7 @@ public class Navigation {
         p.setVisible(true);
         current.add(p);
 		setCurrentFrame(p);
+		this.paused = true;
 	}
 	
 	/**
@@ -117,7 +120,7 @@ public class Navigation {
 		screen.setVisible(true);
 		current.add(screen);
 		setCurrentFrame(screen);
-		
+		this.paused = false;
 	}
 	/***
 	 * Sets the displayed screen to the screen that is passed in
