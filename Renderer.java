@@ -64,11 +64,12 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	public Renderer(Navigation n, int width, int height){
 		navigator = n;
 		Color bg = new Color(112,200,160);
-		this.setBackground(bg);
+		Color bg2 = new Color(172,230,250);
+		this.setBackground(bg2);
 		this.vert = this.horz = this.tick = 0;
 		this.WID = width;
 		this.HEI = height;
-		this.OFFSET = 5; 
+		this.OFFSET = (int)(RWID/2); 
 		this.colSet = 150;
 		this.colFlag = 1;
 		this.setVisible(true);
@@ -179,7 +180,8 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		drawMaze(cg);
 		drawSentries(cg);
 		drawPlayer(cg);
-		g.drawImage(canvas, OFFSET, OFFSET, null);
+		g.fillRect(0, 0, (int)((RWID+1)*MAZESIZE+1), (int)((RHEI+1)*MAZESIZE)+1);
+		g.drawImage(canvas, OFFSET+3, OFFSET+3, null);
 
 	}
 	
