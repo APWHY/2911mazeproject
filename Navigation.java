@@ -12,6 +12,7 @@ public class Navigation {
 	private Settings s;
 	private HowToPlay h;
 	private Pause p;
+	private Endscreen e; 
 	//private Menu screen;
 	private Renderer screen;
 
@@ -122,6 +123,21 @@ public class Navigation {
 		setCurrentFrame(screen);
 		this.paused = false;
 	}
+	
+	/**
+	 * Shows Endscreen
+	 */
+	public void showEndScreen(TimerDisplay timer) {
+		try {
+			e = new Endscreen(this, timer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        e.setVisible(true);
+        current.add(e);
+		setCurrentFrame(e);
+	}
+	
 	/***
 	 * Sets the displayed screen to the screen that is passed in
 	 * @param screen
