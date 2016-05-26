@@ -370,7 +370,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	public void actionPerformed(ActionEvent e){
 		tick = (tick + 1) % TICKRATE;
 		updateGame(vert,horz,tick);
-		if(tick == 0){
+		if(tick == 0 && navigator.paused == false){
 			this.timer.incrementSecond();
 			this.timerDisplay.setText(timerPadding + this.timer.getTime());
 			this.timerDisplay.repaint();
