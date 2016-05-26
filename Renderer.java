@@ -337,16 +337,16 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	@Override
 	public void keyReleased(KeyEvent e) {	
 		if(e.getKeyCode() == KeyEvent.VK_UP){
-			vert = 0;
+			if (vert == 1) vert = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_DOWN){
-			vert = 0;
+			if (vert == -1) vert = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-			horz = 0;
+			if (horz == -1) horz = 0;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_LEFT){
-			horz = 0;
+			if (horz == 1) horz = 0;
 		}
 		
 	}

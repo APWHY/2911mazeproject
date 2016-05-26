@@ -13,15 +13,23 @@ public class Player {
 	private static final int KEY = 6;
 	
 	private static final int REALLYBIGNUMBER = 36000;
-	private final int SPEED = 1;
+	private final int SPEED = 3; //this is actually maxspeed
 	
 	private int xPos;
 	private int yPos;
+	private float xFos;
+	private float yFos;
 	
 	private int tileWidth;
 	private int tileHeight;
 	private int arcDist;
 	private int arcWidth;
+	
+	private float a;
+	private int sx;
+	private int sy;
+	private float fx;
+	private float fy;
 
 	private int userRad; //Tom -- using radius instead since it's a circle
 	public int caught; // just for testing get rid of this - Could use to trigger game over?
@@ -44,7 +52,13 @@ public class Player {
 		this.userRad = tileWidth/4;
 		this.xPos = maze.getTileType(START).getCol() * tileWidth  + userRad*2;
 		this.yPos = maze.getTileType(START).getRow() * tileHeight + userRad*2;
-		
+		xFos = xPos;
+		yFos = yPos;
+		a = (float)0.4;
+		sx = 0;
+		sy = 0;
+		fx = 0;
+		fy = 0;
 		this.caught = 25;
 	}
 	
@@ -57,22 +71,60 @@ public class Player {
 	 * @return
 	 */
 	public Maze move(int vert, int horz, Maze maze){
+		//friction
+		if(Math.abs(.2*(fy)/Math.abs(fy))> Math.abs(fy) && vert == 0) fy = 0;
+		if(Math.abs(.2*(fx)/Math.abs(fx))> Math.abs(fx) && horz == 0) fx = 0;
+		if (fy != 0) fy = (float) (fy - .2*(fy)/Math.abs(fy));	
+		if (fx != 0) fx = (float) (fx - .2*(fx)/Math.abs(fx));
 		
+		//vector calcs
 		if(vert == 1){
-			this.up(maze);
+			fy = fy - a;
+		//	this.up(maze);
+//			System.out.println("up" );
 		}
 		
 		if(vert == -1){
-			this.down(maze);
+			fy = fy + a;
+		//	this.down(maze);
+//			System.out.println("down" );
 		}
 		
 		if(horz == 1){
-			this.left(maze);
+			fx = fx - a;
+		//	this.left(maze);
+//			System.out.println("left" );
 		}
 		
 		if(horz == -1){
-			this.right(maze);
+			fx = fx + a;
+		//	this.right(maze);
+//			System.out.println("right" );
 		}
+		//maxspeed calcs
+		if(Math.abs(fy) > SPEED){
+			fy = (Math.abs(fy)/fy)*SPEED;
+		}
+		if(Math.abs(fx) > SPEED){
+			fx = (Math.abs(fx)/fx)*SPEED;
+		}
+		//collision checks
+		for(int i = 0; i < Math.abs(fy) && !tileIsWall(maze, Math.round(xFos), Math.round(yFos)); i++)
+			yFos =  (yFos + (fy)/Math.abs(fy));
+		if(tileIsWall(maze, Math.round(xFos), Math.round(yFos))){
+			yFos = (yFos - (fy)/Math.abs(fy));
+			fy = (float) (-0.8*fy);//bounce check
+		}
+		for(int i = 0; i < Math.abs(fx) && !tileIsWall(maze, Math.round(xFos), Math.round(yFos)); i++)
+			xFos = (xFos + (fx)/Math.abs(fx));
+
+		if(tileIsWall(maze, Math.round(xFos), Math.round(yFos))){
+			xFos =  (xFos - (fx)/Math.abs(fx));
+			fx = (float) (-0.8*fx);
+		}
+		xPos = Math.round(xFos);
+		yPos = Math.round(yFos);
+		
 		if(!maze.isKeyStatus()){
 			this.checkKey(maze, xPos, yPos);
 		}else{
@@ -147,9 +199,9 @@ public class Player {
 	public void up(Maze maze) {
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			yPos -= 1;
-		if(tileIsWall(maze, xPos, yPos))
+		if(tileIsWall(maze, xPos, yPos)){
 			yPos++;
-
+		}
 	}
 
 	public void down(Maze maze) {
