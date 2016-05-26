@@ -22,7 +22,7 @@ public class Navigation {
 	private final int FPS = 1000/60;
 
 	//pause timer
-	public bool paused = true;
+	public boolean paused = true;
 
 	public Navigation() throws IOException {
 		startWindow();
