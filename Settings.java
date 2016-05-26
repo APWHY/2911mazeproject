@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 
 public class Settings extends JPanel {
@@ -36,37 +37,37 @@ public class Settings extends JPanel {
 		
 		// Create buttons with icons in them + hover images
         ArrayList<JButton> buttonArray = new ArrayList<JButton>();
-        play = new JButton(createImage("playP.png"));
-        play.setRolloverIcon(createImage("playA.png"));
-        buttonArray.add(play);
-
-        menu = new JButton(createImage("menuP.png"));
-        menu.setRolloverIcon(createImage("menuA.png"));
-        buttonArray.add(menu);
-
-        easy = new JButton(createImage("Easy-P.bmp"));
-        easy.setRolloverIcon(createImage("Easy-A.bmp"));
-        buttonArray.add(easy);
-
-        medium = new JButton(createImage("Medium-P.bmp"));
-        medium.setRolloverIcon(createImage("Medium-A.bmp"));
-        buttonArray.add(medium);
-
-        hard = new JButton(createImage("Hard-P.bmp"));
-        hard.setRolloverIcon(createImage("Hard-A.bmp"));
-        buttonArray.add(hard);
-
-        few = new JButton(createImage("Few-P.bmp"));
-        few.setRolloverIcon(createImage("Few-A.bmp"));
-        buttonArray.add(few);
-
-        many = new JButton(createImage("Many-P.bmp"));
-        many.setRolloverIcon(createImage("Many-A.bmp"));
-        buttonArray.add(many);
-
-        lots = new JButton(createImage("Lots-P.bmp"));
-        lots.setRolloverIcon(createImage("Lots-A.bmp"));
-        buttonArray.add(lots);
+	        play = new JButton(createImage("playP.png"));
+	        play.setRolloverIcon(createImage("playA.png"));
+	        buttonArray.add(play);
+	
+	        menu = new JButton(createImage("menuP.png"));
+	        menu.setRolloverIcon(createImage("menuA.png"));
+	        buttonArray.add(menu);
+	
+	        easy = new JButton(createImage("Easy-P.bmp"));
+	        easy.setRolloverIcon(createImage("Easy-A.bmp"));
+	        buttonArray.add(easy);
+	
+	        medium = new JButton(createImage("Medium-P.bmp"));
+	        medium.setRolloverIcon(createImage("Medium-A.bmp"));
+	        buttonArray.add(medium);
+	
+	        hard = new JButton(createImage("Hard-P.bmp"));
+	        hard.setRolloverIcon(createImage("Hard-A.bmp"));
+	        buttonArray.add(hard);
+	
+	        few = new JButton(createImage("Few-P.bmp"));
+	        few.setRolloverIcon(createImage("Few-A.bmp"));
+	        buttonArray.add(few);
+	
+	        many = new JButton(createImage("Many-P.bmp"));
+	        many.setRolloverIcon(createImage("Many-A.bmp"));
+	        buttonArray.add(many);
+	
+	        lots = new JButton(createImage("Lots-P.bmp"));
+	        lots.setRolloverIcon(createImage("Lots-A.bmp"));
+	        buttonArray.add(lots);
         
         for (JButton button: buttonArray){
         	button.setRolloverEnabled(true);
@@ -136,56 +137,72 @@ public class Settings extends JPanel {
 				navigator.setNumSen(30);
 			}
 		});
-		
-		
+		//make labels for settings
+		JLabel eztxt  = new JLabel("", JLabel.CENTER);        
+			eztxt.setText("Choose how complicated the maze should be");
+			eztxt.setOpaque(true);
+			eztxt.setBackground(Color.GREEN);
+			eztxt.setForeground(Color.BLACK);
+			eztxt.setAlignmentX(CENTER_ALIGNMENT);
+			eztxt.setFont(eztxt.getFont().deriveFont((float)24));
+
+		JLabel sentxt  = new JLabel("", JLabel.CENTER);        
+			sentxt.setText("Choose how many sentries you want in the maze");
+			sentxt.setOpaque(true);
+			sentxt.setBackground(Color.GREEN);
+			sentxt.setForeground(Color.BLACK);
+			sentxt.setAlignmentX(CENTER_ALIGNMENT);
+			sentxt.setFont(sentxt.getFont().deriveFont((float)24));
 		//lay out jpanels for menu buttons
         JPanel boxdiff = new JPanel();
-        boxdiff.setOpaque(false);
-        boxdiff.setLayout(new BoxLayout(boxdiff, BoxLayout.LINE_AXIS));
-        boxdiff.add(Box.createHorizontalGlue());
-        boxdiff.add(easy);
-        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
-        boxdiff.add(medium);
-        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
-        boxdiff.add(hard);
+	        boxdiff.setOpaque(false);
+	        boxdiff.setLayout(new BoxLayout(boxdiff, BoxLayout.LINE_AXIS));
+	        boxdiff.add(Box.createHorizontalGlue());
+	        boxdiff.add(easy);
+	        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxdiff.add(medium);
+	        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxdiff.add(hard);
 		
         JPanel boxsens = new JPanel();
-        boxsens.setOpaque(false);
-        boxsens.setLayout(new BoxLayout(boxsens, BoxLayout.LINE_AXIS));
-        boxsens.add(Box.createHorizontalGlue());
-        boxsens.add(few);
-        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
-        boxsens.add(many);
-        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
-        boxsens.add(lots);
+	        boxsens.setOpaque(false);
+	        boxsens.setLayout(new BoxLayout(boxsens, BoxLayout.LINE_AXIS));
+	        boxsens.add(Box.createHorizontalGlue());
+	        boxsens.add(few);
+	        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxsens.add(many);
+	        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxsens.add(lots);
 		
 		JPanel boxButtons = new JPanel();
-		boxButtons.setOpaque(false);
-		boxButtons.setLayout(new BoxLayout(boxButtons, BoxLayout.LINE_AXIS));
-		boxButtons.add(Box.createHorizontalGlue());
-		boxButtons.add(menu);
-		boxButtons.add(Box.createRigidArea(new Dimension(300, 0)));
-		boxButtons.add(play);
+			boxButtons.setOpaque(false);
+			boxButtons.setLayout(new BoxLayout(boxButtons, BoxLayout.LINE_AXIS));
+			boxButtons.add(Box.createHorizontalGlue());
+			boxButtons.add(menu);
+			boxButtons.add(Box.createRigidArea(new Dimension(300, 0)));
+			boxButtons.add(play);
 		
 		
 		// Create JPanel for title
 		JPanel title = new JPanel();
-		ImageIcon headerIcon = createImage("title.png");
-		JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
-		title.add(headerLabel,BorderLayout.CENTER);
-		title.setOpaque(false);
+			ImageIcon headerIcon = createImage("title.png");
+			JLabel headerLabel = new JLabel(headerIcon, JLabel.CENTER);
+			title.add(headerLabel,BorderLayout.CENTER);
+			title.setOpaque(false);
 		
 		// Place components in a box layout
 		Box box = Box.createVerticalBox();
-		box.add(Box.createVerticalStrut(75));
-		box.add(title);
-		box.add(Box.createVerticalStrut(40));
-		box.add(boxdiff);
-		box.add(Box.createVerticalStrut(40));
-		box.add(boxsens);
-		box.add(Box.createVerticalStrut(40));
-		box.add(boxButtons);
-        add(box); 
+			box.add(Box.createVerticalStrut(75));
+			box.add(title);
+			box.add(Box.createVerticalStrut(40));
+			box.add(eztxt);
+			box.add(boxdiff);
+			box.add(Box.createVerticalStrut(40));
+			box.add(sentxt);
+			box.add(boxsens);
+			box.add(Box.createVerticalStrut(40));
+			box.add(boxButtons);
+			add(box); 
         
         setBackground(Color.white);
         
