@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -28,12 +29,19 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	private Maze maze;
 	private int colSet,colFlag;
 	private Player player;
+	private int vert, horz,tick;
+	private int WID,HEI,OFFSET;
+	int start, end;
+	int numSen, diff;
 	
 	// Graphics related variables
 	BufferedImage canvas;
 	BufferedImage[][] sprites;
-	private int vert, horz,tick;
-	private int WID,HEI,OFFSET;
+	BufferedImage[][] playerSprites;
+	//BufferedImage playerSprite;
+	//BufferedImage img = null;
+
+
 	
 	// Constants
 	private final int RWID = 24, RHEI = 24; // Must be divisible by 4
@@ -50,14 +58,18 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	private final int ARCDIST = (int)(RWID*1.3);
 	private final int ARCWIDTH = 45;
+	private final int STARTSIZE = 100;
 	
 	private final int FPS = 1000/60;
 	private final int TICKRATE = 60; //number of frames for one second
+	private final int STARTTIME = 120;
+	private Timer fpsTimer;
 	
 	// Buttons + Navigation
 	private JButton pause;
 	private TimerDisplay timer;
 	private JLabel timerDisplay;
+	private JLabel bonusDisplay;
 	private String timerPadding = "          "; //Can't get struts to cooperate :(
 	private Navigation navigator;
 	
@@ -74,25 +86,38 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		this.colFlag = 1;
 		this.setVisible(true);
 		this.setFocusable(true);
+		this.numSen = numSen;
+		this.diff = diff;
 		this.maze = new Maze(this.MAZESIZE, numSen, diff);
-		this.timer = new TimerDisplay();
+		this.timer = new TimerDisplay(STARTTIME);
+		start = STARTSIZE;
+		end = 0;
 		try {
 			this.sprites = getSprites();
 		} catch (IOException e1) {
 			// incase the sprites aren't there for some reason idk
 			e1.printStackTrace();
 		}
+		try {
+		    this.playerSprites = getPlayerSprites();
+		} catch (IOException e) {
+			System.err.println("Something wrong with player sprites.");
+		}
+		
+		//this.playerSprite = new ImageIO.read(new File("tempPlayer.png"));
+		
 		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
 		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
 		//Tom -- we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
 		//we also don't need framewidth and frameheight for the same reasons
 		
-		Timer fpsTimer = new Timer(FPS, this);
+		fpsTimer = new Timer(FPS, this);
 		fpsTimer.setRepeats(true);
 		fpsTimer.start();
 		
 		addKeyListener(this); // ???
 		addMouseListener(this); // ???
+		//to whoever put the ??? marks there those are needed to make sure that the game listens to key and mouse strokes --tom
 		
 		
 		//adding Pause button & timer counter??
@@ -119,6 +144,10 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 				navigator.showPause();
 			}
 		});
+		JLabel timerText = new JLabel();
+		timerText.setText(timerPadding + "Time left: ");
+		timerText.setFont(new Font("Rockwell", Font.BOLD, 30));
+		timerText.setForeground(Color.DARK_GRAY);		
 		
 		timerDisplay = new JLabel();
 		timerDisplay.setText(timerPadding + this.timer.getTime());
@@ -133,6 +162,18 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		//add(timerDisplay);
 		//timerDisplay.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
+		JLabel bonusText = new JLabel();
+		bonusText.setText(timerPadding + "Bonus left: ");
+		bonusText.setFont(new Font("Rockwell", Font.BOLD, 30));
+		bonusText.setForeground(Color.DARK_GRAY);
+		
+		bonusDisplay = new JLabel();
+		bonusDisplay.setText(timerPadding  + this.timer.getBonus());
+		bonusDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
+		bonusDisplay.setForeground(Color.DARK_GRAY);
+		bonusDisplay.setVisible(true);
+		
+		
 		
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalStrut(725));
@@ -141,15 +182,39 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 
 		VerBox.add(Box.createVerticalStrut(10));
 		//VerBox.add(Box.createHorizontalStrut(100)); //added whitespace padding instead.
+		VerBox.add(timerText);
 		VerBox.add(timerDisplay);
+		VerBox.add(bonusText);
+		VerBox.add(bonusDisplay);
 		
 		VerBox.add(Box.createVerticalStrut(350));
+		VerBox.add(Box.createRigidArea(new Dimension(50, 0)));
 		VerBox.add(pause);
 	
 		box.add(VerBox);
 		add(box);
 	}
 	
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	public int getARCWIDTH() {
+		return ARCWIDTH;
+	}
+
 	/**
 	 * 
 	 * 
@@ -180,6 +245,20 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		drawMaze(cg);
 		drawSentries(cg);
 		drawPlayer(cg);
+		if(maze.isExitStatus() && end <= 0){
+			end = (RWID)*MAZESIZE;
+			maze.setExitStatus(false);
+			timer.addTime();
+		}
+		if(end > 0){
+			cg.fillRect(0, 0, (RWID)*MAZESIZE-end, (RWID)*MAZESIZE);
+			end = end - 10;
+			if(end <= 0){
+				maze = new Maze(this.MAZESIZE, numSen, diff);
+				player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH);
+				start = STARTSIZE;
+			}
+		}
 		g.fillRect(0, 0, (int)((RWID+1)*MAZESIZE+1), (int)((RHEI+1)*MAZESIZE)+1);
 		g.drawImage(canvas, OFFSET+3, OFFSET+3, null);
 
@@ -230,14 +309,19 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	 * @param g
 	 */
 	private void drawPlayer(Graphics g){ // it's more OOP for this function to be in renderer
-		
-		g.setColor(new Color(20, this.player.caught,50));
+		//draws a circle around the player at start of maze
+		g.setColor(Color.ORANGE);
+		if(start > 0){
+			g.fillArc(this.player.getxPos()-start, this.player.getyPos()-start, 2*start, 2*start, 0,360);
+			start--;
+		}
 		// Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
 		// original
 		// g.fillOval(player.getxPos()+OFFSET, player.getyPos()+OFFSET, player.getUserRad(), player.getUserRad());
-		g.fillOval(this.player.getxPos()-(this.player.getUserRad()), this.player.getyPos()-(this.player.getUserRad()), this.player.getUserRad()*2, this.player.getUserRad()*2);
+		//g.fillOval(this.player.getxPos()-(this.player.getUserRad()), this.player.getyPos()-(this.player.getUserRad()), this.player.getUserRad()*2, this.player.getUserRad()*2);
+		g.drawImage(this.playerSprites[this.player.getDirection()][0], this.player.getxPos()-15, this.player.getyPos()-20, this.player.getxPos()+15, this.player.getyPos()+10, 1, 1, 20, 20, this);
+		//g.drawImage(sprites[5][0], sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), (1+sentry.getColumn())*(this.RWID), (1+sentry.getRow())*(this.RHEI), 1,1, 15,15, this);
 
-		
 	}
 	
 	/**
@@ -290,6 +374,21 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		return newSprites;
 	}
 	
+	private BufferedImage[][] getPlayerSprites() throws IOException{
+		BufferedImage bigImg = ImageIO.read(new File("playerSoldier.png"));
+		int spriteCols = 8;
+		int spriteRows = 1;
+		
+		BufferedImage[][] newSprites = new BufferedImage[spriteCols][spriteRows];
+        for (int i = 0; i < spriteRows; i++)
+        {
+            for (int j = 0; j < spriteCols; j++)
+            {
+                newSprites[j][i] = bigImg.getSubimage(j * 20, i * 20, 20, 20);
+            }
+        }
+		return newSprites;
+	}
 	
 	/**
 	 * 
@@ -370,15 +469,25 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	@Override
 	public void actionPerformed(ActionEvent e){
-		tick = (tick + 1) % TICKRATE;
-		updateGame(vert,horz,tick);
-		if(tick == 0 && navigator.paused == false){
-			this.timer.incrementSecond();
-			this.timerDisplay.setText(timerPadding + this.timer.getTime());
-			this.timerDisplay.repaint();
+		if (navigator.getShowing() == this){
+			tick = (tick + 1) % TICKRATE;
+			updateGame(vert,horz,tick);
+			if(tick == 0 && navigator.isPaused() == false){
+				this.timer.incrementSecond();
+				this.timerDisplay.setText(timerPadding + this.timer.getTime());
+				this.timerDisplay.repaint();
+				this.bonusDisplay.setText(timerPadding + this.timer.getBonus());
+				this.bonusDisplay.repaint();
+			}
+			
+			if(timer.getSeconds() <= 0){
+				navigator.showEndScreen(timer);
+				fpsTimer.stop();
+			
+			}
+			
+			repaint();	
 		}
-		
-		repaint();	
 	}
 	
 	protected static ImageIcon createImage(String path) throws IOException {

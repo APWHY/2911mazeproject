@@ -1,12 +1,42 @@
 public class TimerDisplay {
-	private int seconds = 0;
+	private int seconds = 600;
+	private int total = 600;
+	private int bonus = 40;
+	private final int BONUSTIME = 40;
+	private final int EXTRATIME = 30;
+	public TimerDisplay(int startTime){
+		seconds = startTime;
+		bonus = BONUSTIME;
+		total = seconds;
+	}
 	
+	public int getSeconds() {
+		return seconds;
+	}
+
+	public String getTotal() {
+		return hourMinSecFormat(total);
+	}
+
 	public void incrementSecond() {
-		seconds++;
+		seconds--;
+		if(bonus > 0){
+			bonus--;
+		}
+	}
+	
+	public void addTime(){
+		seconds = seconds + EXTRATIME + bonus;
+		total = total + EXTRATIME + bonus;
+		bonus = BONUSTIME;
 	}
 	
 	public String getTime(){
 		return hourMinSecFormat(this.seconds);
+	}
+	
+	public String getBonus(){
+		return hourMinSecFormat(this.bonus);
 	}
 	
 	private String hourMinSecFormat(int seconds) {

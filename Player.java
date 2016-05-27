@@ -32,7 +32,7 @@ public class Player {
 	private float fy;
 
 	private int userRad; //Tom -- using radius instead since it's a circle
-	public int caught; // just for testing get rid of this - Could use to trigger game over?
+	private boolean caught;
 
 	/**
 	 * Constructor.
@@ -44,7 +44,11 @@ public class Player {
 	 * @param arcWidth
 	 */
 	public Player(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
+		reset(maze,tileWidth,tileHeight,arcDist,arcWidth);
 
+	}
+	
+	private void reset(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.arcDist = arcDist;
@@ -59,7 +63,7 @@ public class Player {
 		sy = 0;
 		fx = 0;
 		fy = 0;
-		this.caught = 25;
+		this.caught = false;
 	}
 	
 	/**
@@ -131,9 +135,18 @@ public class Player {
 			this.checkExit(maze, xPos, yPos);
 		}
 		this.checkLasers(maze);
+		
+		if(caught){
+			reset(maze,tileWidth,tileHeight,arcDist,arcWidth);
+		}
+		
 		return maze;
 	}
 	
+	public boolean isCaught() {
+		return caught;
+	}
+
 	/**
 	 * 
 	 * 
@@ -150,10 +163,11 @@ public class Player {
 		float angleLow = 0;
 		float angleHigh = 0;
 		
-		this.caught = 25;
+		caught = false;
 		
 		for(Sentry sentry: sentries){
 			//first check that the user is even within range of the sentry
+
 			if(Math.sqrt(Math.pow(sentry.getRow()*tileWidth+tileWidth/2-yPos,2) + Math.pow(sentry.getColumn()*tileHeight+tileHeight/2-xPos,2)) < arcDist+userRad){
 				//then see if the user is in the beam or not
 				//playerArc is the angle of the arc where the chord of the arc is the player diamater. No checking of tan's boundary conditions because we know this number to be between 0 and <180
@@ -184,11 +198,11 @@ public class Player {
 				angleHigh = (REALLYBIGNUMBER + sentry.getDegree() + playerArc + arcWidth) % 360;
 				if(angleLow < angleHigh){
 					if (angleLow < playerSent && angleHigh > playerSent){
-						caught = 150;
+						caught = true;
 					}
 				}else{
 					if(angleLow < playerSent || angleHigh > playerSent){
-						caught = 255;
+						caught = true;
 					}
 				}
 			
@@ -252,6 +266,7 @@ public class Player {
 				|| maze.tileType(bottomEdge, rightEdge) == EXIT
 				|| maze.tileType(bottomEdge, leftEdge)  == EXIT) 
 			maze.activateShrine();//and the winner for cheesiest function name goes to....
+		
 	}
 	
 	private boolean tileIsWall(Maze maze, int x, int y){
@@ -285,5 +300,38 @@ public class Player {
 		return userRad;
 	}
 
-
+	/**
+	 * 
+	 * @return One of 8 directions,
+	 * starting from north (== 0),
+	 * going clockwise.
+	 * 0 indicates stationary.
+	 */
+	public int getDirection(){
+		if(fx == 0){
+			if(fy == 0)
+				return 0;//8; //stationary
+			else if(fy > 0)
+				return 4; //south
+			else if (fy < 0)
+				return 0; //north
+		}
+		if(fx > 0){
+			if(fy == 0)
+				return 2; //east
+			else if(fy > 0)
+				return 3; //se
+			else if (fy < 0)
+				return 1; //ne
+		}
+		if(fx < 0){
+			if(fy == 0)
+				return 6; //west
+			else if(fy > 0)
+				return 5; //sw
+			else if (fy < 0)
+				return 7; //nw
+		}
+		return 0;//8;//just in case
+	}
 }

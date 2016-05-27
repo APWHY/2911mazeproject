@@ -15,25 +15,32 @@ public class Navigation {
 	private Endscreen e; 
 	//private Menu screen;
 	private Renderer screen;
-
-	int numSen;
-	int diff;
+	private Component showing;
+	private int numSen;
+	private int diff;
 	
 	//PUT THE MAZE AND PLAYER IN RENDERER
 	
 	private final int WWID = 1000;//window width and height
 	private final int WHEI = 800;
-	private final int FPS = 1000/60;
 
 	//pause timer
-	public boolean paused = false;
-
+	private boolean paused = false;
+	
 	public Navigation() throws IOException {
 		numSen = 3; //just some default starting variables 
 		diff = 15;
 		startWindow();
 	}
-	
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
 	public int getNumSen() {
 		return numSen;
 	}
@@ -57,18 +64,17 @@ public class Navigation {
 		
 		current = new JFrame("The Amazing Maze");
 		current.setSize(WWID,WHEI);//since we have pack the size shouldn't matter 
-		current.setResizable(false);
+		current.setResizable(true);
 		//current.pack(); //we don't want this since everything should just work around the fact the window is constant size		
 		current.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//lets us close the window        
 		current.setBackground(Color.GREEN);
 
 		current.setVisible(true); 
 		
-		//screen = new Renderer(WWID,WHEI);
-		m = new Menu(this);
+
 		
 		//current.getContentPane().add(screen);
-		current.getContentPane().add(m); //This is commented out since it won't work without the required images -- Tom
+		//showMenu(); //This is commented out since it won't work without the required images -- Tom
 	}
 
 	
@@ -81,6 +87,13 @@ public class Navigation {
 	}
 	
 	public void showMenu() {
+		//screen = new Renderer(WWID,WHEI);
+		try {
+			m = new Menu(this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		m.setVisible(true);
 		setCurrentFrame(m);
 	}
@@ -90,7 +103,6 @@ public class Navigation {
 	public void showGame() {
 		screen = new Renderer(this,WWID,WHEI, numSen, diff);
 		screen.setVisible(true);
-		current.add(screen);
 		setCurrentFrame(screen);
 	}
 	
@@ -102,7 +114,6 @@ public class Navigation {
 			e.printStackTrace();
 		}
 		s.setVisible(true);
-		current.add(s);
 		setCurrentFrame(s);
 	}
 	
@@ -114,7 +125,6 @@ public class Navigation {
 			e.printStackTrace();
 		}
 		h.setVisible(true);
-        current.add(h);
 		setCurrentFrame(h);
 	}
 	
@@ -131,7 +141,6 @@ public class Navigation {
 			e.printStackTrace();
 		}
         p.setVisible(true);
-        current.add(p);
 		setCurrentFrame(p);
 		this.paused = true;
 	}
@@ -142,7 +151,6 @@ public class Navigation {
 	public void unPause() {
 		p.setVisible(false);
 		screen.setVisible(true);
-		current.add(screen);
 		setCurrentFrame(screen);
 		this.paused = false;
 	}
@@ -157,7 +165,6 @@ public class Navigation {
 			e.printStackTrace();
 		}
         e.setVisible(true);
-        current.add(e);
 		setCurrentFrame(e);
 	}
 	
@@ -166,18 +173,26 @@ public class Navigation {
 	 * @param screen
 	 */
 	private void setCurrentFrame(Component view) {
-		//you don't want to keep adding stuff to the jframe because you'll eventually have 29384729347 jpanels in the jframe
-		//instead add all the jpanels to the jframe in the constructor and just toggle visibility --Tom
-		for(Component c : current.getContentPane().getComponents()){
-			c.setVisible(false);
-			c.setFocusable(false);
-		}
 
+		current.getContentPane().add(view);
+		//you don't want to keep adding stuff to the jframe because you'll eventually have 29384729347 jpanels in the jframe
+		//so remove other panels before adding them --tom
+		for(Component c : current.getContentPane().getComponents()){	
+			if(!view.equals(c)){
+				current.remove(c);
+			}
+		}
+		showing = view;//this keeps track of the panel that is being shown, although there should only be one panel being shown at any time--tom
 		view.setFocusable(true);
-		view.setVisible(true);
 		view.requestFocusInWindow();
+		view.setVisible(true);
+		current.revalidate();//because im removing stuff you gotta revalidate--tom
 	}
 
+
+	public Component getShowing() {
+		return showing;
+	}
 
 	public Renderer getRenderer(){
 		return screen;

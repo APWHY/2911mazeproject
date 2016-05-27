@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class Endscreen extends JPanel{
 	
 	private JButton reset;
 	private JButton menu;
+	private JLabel timerDisplay;
 	private Navigation navigator;
 	private TimerDisplay t;
 	
@@ -33,6 +35,13 @@ public class Endscreen extends JPanel{
 		menu = new JButton(createImage("menuP.png"));
 		menu.setRolloverEnabled(true);
 		menu.setRolloverIcon(createImage("menuA.png"));
+		
+		//
+		timerDisplay = new JLabel();
+		timerDisplay.setText("Congratulations! You survived for "+ timer.getTotal() + "! Do you want to try again?");
+		timerDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
+		timerDisplay.setForeground(Color.DARK_GRAY);
+		timerDisplay.setVisible(true);
 		
 		// Set border to false
 		reset.setBorderPainted(false);
@@ -64,6 +73,7 @@ public class Endscreen extends JPanel{
 		// Set Alignment
 		reset.setAlignmentX(CENTER_ALIGNMENT);
 		menu.setAlignmentX(CENTER_ALIGNMENT);
+		timerDisplay.setAlignmentX(CENTER_ALIGNMENT);
 		
 		// Create JPanel for title
 		JPanel title = new JPanel();
@@ -75,7 +85,7 @@ public class Endscreen extends JPanel{
 		
 		// Create JPanel for timesup
 		JPanel timesup = new JPanel();
-		ImageIcon timesIcon = createImage("timeup.png");
+		ImageIcon timesIcon = createImage("timesup.png");
 		JLabel timesLabel = new JLabel(timesIcon, JLabel.CENTER);
 		timesup.add(timesLabel,BorderLayout.CENTER);
 		timesup.setOpaque(false);
@@ -87,6 +97,7 @@ public class Endscreen extends JPanel{
 		box.add(title);
 		box.add(Box.createVerticalStrut(40));
 		box.add(timesup);
+		box.add(timerDisplay);
 		//box.add(Box.createVerticalStrut(40));
         //box.add(time used);					//replace time used with timer if you want time to be displayed
 		box.add(Box.createVerticalStrut(40));

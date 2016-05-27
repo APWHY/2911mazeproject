@@ -21,7 +21,7 @@ public class Maze {
 	
 	private Tile[][] maze;
 	private ArrayList<Sentry> sentries;
-	private boolean keyStatus; // Currently unused
+	private boolean keyStatus,exitStatus;
 	private int size;
 	private Tile exit;
 
@@ -50,6 +50,7 @@ public class Maze {
 		addSentries(NUMSEN);
 		addKey(maze, size); // Adding the key to the maze - Andy
 		keyStatus = false;
+		exitStatus = false;
 		findSprites();
 		exit = getTileType(EXIT);
 		getTileType(EXIT).setType(FLOOR);
@@ -150,9 +151,18 @@ public class Maze {
 	public void activateShrine(){
 		exit.setImgRow(0);
 		exit.setImgCol(4);
+		exitStatus = true;
 		//END THE GAME!!!
 	}
 	
+	public void setExitStatus(boolean exitStatus) {
+		this.exitStatus = exitStatus;
+	}
+
+	public boolean isExitStatus() {
+		return exitStatus;
+	}
+
 	public void setKeyStatus(boolean keyStatus) {
 		this.keyStatus = keyStatus;
 	}
