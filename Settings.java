@@ -24,16 +24,16 @@ import javax.swing.JPanel;
 public class Settings extends JPanel {
 	
 	//class variables
-	private JButton play;
-	private JButton menu;
-	private JButton easy;
-	private JButton medium;
-	private JButton hard;
-	private JButton few;
-	private JButton many;
-	private JButton lots;
-
-	private Navigation navigator;
+		private JButton play;
+		private JButton menu;
+		private JButton easy;
+		private JButton medium;
+		private JButton hard;
+		private JButton few;
+		private JButton many;
+		private JButton lots;
+	
+		private Navigation navigator;
 	
 	/**
 	 * Constructor for settings screen.
