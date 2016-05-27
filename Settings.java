@@ -45,28 +45,28 @@ public class Settings extends JPanel {
 	        menu.setRolloverIcon(createImage("menuA.png"));
 	        buttonArray.add(menu);
 	
-	        easy = new JButton(createImage("Easy-P.bmp"));
-	        easy.setRolloverIcon(createImage("Easy-A.bmp"));
+	        easy = new JButton(createImage("EasyP.png"));
+	        easy.setRolloverIcon(createImage("EasyA.png"));
 	        buttonArray.add(easy);
 	
-	        medium = new JButton(createImage("Medium-P.bmp"));
-	        medium.setRolloverIcon(createImage("Medium-A.bmp"));
+	        medium = new JButton(createImage("MediumP.png"));
+	        medium.setRolloverIcon(createImage("MediumA.png"));
 	        buttonArray.add(medium);
 	
-	        hard = new JButton(createImage("Hard-P.bmp"));
-	        hard.setRolloverIcon(createImage("Hard-A.bmp"));
+	        hard = new JButton(createImage("HardP.png"));
+	        hard.setRolloverIcon(createImage("HardA.png"));
 	        buttonArray.add(hard);
 	
-	        few = new JButton(createImage("Few-P.bmp"));
-	        few.setRolloverIcon(createImage("Few-A.bmp"));
+	        few = new JButton(createImage("FewP.png"));
+	        few.setRolloverIcon(createImage("FewA.png"));
 	        buttonArray.add(few);
 	
-	        many = new JButton(createImage("Many-P.bmp"));
-	        many.setRolloverIcon(createImage("Many-A.bmp"));
+	        many = new JButton(createImage("ManyP.png"));
+	        many.setRolloverIcon(createImage("ManyA.png"));
 	        buttonArray.add(many);
 	
-	        lots = new JButton(createImage("Lots-P.bmp"));
-	        lots.setRolloverIcon(createImage("Lots-A.bmp"));
+	        lots = new JButton(createImage("LotsP.png"));
+	        lots.setRolloverIcon(createImage("LotsA.png"));
 	        buttonArray.add(lots);
         
         for (JButton button: buttonArray){
@@ -74,7 +74,7 @@ public class Settings extends JPanel {
         	button.setBorderPainted(false);
         	button.setContentAreaFilled(false);
         	button.setBackground(Color.WHITE);
-        	
+        	button.setAlignmentX(CENTER_ALIGNMENT);
         }
 
 		// Set ActionListeners for settings buttons
@@ -157,21 +157,23 @@ public class Settings extends JPanel {
         JPanel boxdiff = new JPanel();
 	        boxdiff.setOpaque(false);
 	        boxdiff.setLayout(new BoxLayout(boxdiff, BoxLayout.LINE_AXIS));
+	        boxdiff.setAlignmentX(CENTER_ALIGNMENT);
 	        boxdiff.add(Box.createHorizontalGlue());
 	        boxdiff.add(easy);
-	        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxdiff.add(Box.createRigidArea(new Dimension(220, 0)));
 	        boxdiff.add(medium);
-	        boxdiff.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxdiff.add(Box.createRigidArea(new Dimension(220, 0)));
 	        boxdiff.add(hard);
 		
         JPanel boxsens = new JPanel();
 	        boxsens.setOpaque(false);
 	        boxsens.setLayout(new BoxLayout(boxsens, BoxLayout.LINE_AXIS));
+	        boxsens.setAlignmentX(CENTER_ALIGNMENT);
 	        boxsens.add(Box.createHorizontalGlue());
 	        boxsens.add(few);
-	        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxsens.add(Box.createRigidArea(new Dimension(250, 0)));
 	        boxsens.add(many);
-	        boxsens.add(Box.createRigidArea(new Dimension(100, 0)));
+	        boxsens.add(Box.createRigidArea(new Dimension(250, 0)));
 	        boxsens.add(lots);
 		
 		JPanel boxButtons = new JPanel();
