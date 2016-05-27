@@ -171,7 +171,7 @@ public class Maze {
 	/**
 	 * Adds instances of the Sentry class to a maze.
 	 * 
-	 * @param num
+	 * @param num is the number of sentries to create
 	 */
 	public void addSentries(int num) {
 		
@@ -208,8 +208,11 @@ public class Maze {
 		}
 	}
 	
-	// Function to add the key to the maze - Andy
-	
+	/**
+	 * Function to add the key to the maze - Andy
+	 * @param maze is this maze
+	 * @param size is the size of this maze
+	 */
 	public void addKey(Tile[][] maze, int size) {
 		int row = size;
 		int col = 0;
@@ -224,8 +227,12 @@ public class Maze {
 		}while(maze[row][col].getType() != KEY); // continue the loop if the tile is not a floor or a corner
 	}
 	
-	// Function to check if a tile is a corner (one pathway only) - Andy
-	
+	/**
+	 * Function to check if a tile is a corner (one pathway only) - Andy
+	 * @param tile is the square/tile to check
+	 * @return true if the checking square/tile is a corner
+	 *         false if it is not
+	 */
 	public boolean isCorner(Tile tile) {
 		int count = 0;
 		if (getN(tile) != null && getN(tile).getType() == FLOOR) {// need to include null check because getN returns null if you check outside the maze -- tom
