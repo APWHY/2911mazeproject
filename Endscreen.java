@@ -23,6 +23,13 @@ public class Endscreen extends JPanel{
 	private Navigation navigator;
 	private TimerDisplay t;
 	
+	/**
+	 * Constructor for end game screen.
+	 * 
+	 * @param n Central navigation screen
+	 * @param timer Timer with time value to be displayed
+	 * @throws IOException
+	 */
 	public Endscreen(Navigation n, TimerDisplay timer) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
@@ -109,6 +116,13 @@ public class Endscreen extends JPanel{
        
 	}
 	
+	/**
+	 * Helper function to create image to be drawn on JFrame.
+	 * 
+	 * @param path Image file name
+	 * @return Image 
+	 * @throws IOException
+	 */
 	protected static ImageIcon createImage(String path) throws IOException {
 		java.net.URL imgURL = Menu.class.getResource(path);
 		if (imgURL != null) {
@@ -119,6 +133,9 @@ public class Endscreen extends JPanel{
 		}
 	}
 	
+	/**
+	 * Draws the images onto the JFrame.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);

@@ -20,7 +20,13 @@ public class Pause extends JPanel{
 	private JButton reset;
 	private JButton menu;
 	private Navigation navigator;
-	
+
+	/**
+	 * Constructor for pause screen.
+	 * 
+	 * @param n Central navigation class
+	 * @throws IOException
+	 */
 	public Pause(Navigation n) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
@@ -111,6 +117,13 @@ public class Pause extends JPanel{
        
 	}
 	
+	/**
+	 * Helper function to create image to be drawn on JFrame.
+	 * 
+	 * @param path Image file name
+	 * @return Image 
+	 * @throws IOException
+	 */
 	protected static ImageIcon createImage(String path) throws IOException {
 		java.net.URL imgURL = Menu.class.getResource(path);
 		if (imgURL != null) {
@@ -121,6 +134,9 @@ public class Pause extends JPanel{
 		}
 	}
 	
+	/**
+	 * Draws the images onto the JFrame.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);

@@ -31,26 +31,40 @@ public class Tile {
 
 	}
 
-
-
+	/**
+	 * Get column index of image in Tile.
+	 * 
+	 * @return int column index
+	 */
 	public int getImgCol() {
 		return imgCol;
 	}
 
 
-
+	/**
+	 * Set column index for image in tile.
+	 * 
+	 * @param imgCol int image column
+	 */
 	public void setImgCol(int imgCol) {
 		this.imgCol = imgCol;
 	}
 
-
-
+	/**
+	 * Get row index of image in Tile.
+	 * 
+	 * @return int row index
+	 */
 	public int getImgRow() {
 		return imgRow;
 	}
 
 
-
+	/**
+	 * Set row index for image in tile.
+	 * 
+	 * @param imgRow int image row
+	 */
 	public void setImgRow(int imgRow) {
 		this.imgRow = imgRow;
 	}

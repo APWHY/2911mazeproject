@@ -61,6 +61,9 @@ public class Maze {
 	//but the logic should be done in maze.java while the images stored 
 	//in renderer because I don't want to store images outside of 
 	//renderer. It also saves space
+	/**
+	 * Calculates which sprite should be displayed for each tile on the maze.
+	 */
 	private void findSprites() {
 		
 		Random x = new Random();
@@ -136,6 +139,9 @@ public class Maze {
 		
 	}
 
+	/**
+	 * Sets the exit tile when the key is collected.
+	 */
 	public void keyOff(){
 		Tile temp = getTile(exit.getCol(), exit.getRow());
 		temp.setType(EXIT);
@@ -148,6 +154,10 @@ public class Maze {
 		keyStatus = true;
 	}
 	
+	/**
+	 * Called when the player makes it to the end tile. 
+	 * Displays the key on the pedestal.
+	 */
 	public void activateShrine(){
 		exit.setImgRow(0);
 		exit.setImgCol(4);
@@ -155,10 +165,20 @@ public class Maze {
 		//END THE GAME!!!
 	}
 	
+	/**
+	 * Set exit status.
+	 * 
+	 * @param exitStatus boolean
+	 */
 	public void setExitStatus(boolean exitStatus) {
 		this.exitStatus = exitStatus;
 	}
 
+	/**
+	 * Gets the exit status.
+	 * 
+	 * @return exit status as boolean
+	 */
 	public boolean isExitStatus() {
 		return exitStatus;
 	}
@@ -210,6 +230,7 @@ public class Maze {
 	
 	/**
 	 * Function to add the key to the maze - Andy
+	 * 
 	 * @param maze is this maze
 	 * @param size is the size of this maze
 	 */
@@ -229,6 +250,7 @@ public class Maze {
 	
 	/**
 	 * Function to check if a tile is a corner (one pathway only) - Andy
+	 * 
 	 * @param tile is the square/tile to check
 	 * @return true if the checking square/tile is a corner
 	 *         false if it is not
@@ -464,31 +486,67 @@ public class Maze {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * 
+	 * @param tile
+	 * @return
+	 */
 	public Tile getNW(Tile tile){
 		return getW(getN(tile));
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param tile
+	 * @return
+	 */
 	public Tile getNE(Tile tile){
 		return getE(getN(tile));
 	}
 	
+	/**
+	 * 
+	 * @param tile
+	 * @return
+	 */
 	public Tile getSW(Tile tile){
 		return getW(getS(tile));
 	}
 	
+	/**
+	 * 
+	 * @param tile
+	 * @return
+	 */
 	public Tile getSE(Tile tile){
 		return getE(getS(tile));
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
 	public boolean isKeyStatus() {
 		return keyStatus;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * 
+	 * @param col
+	 * @param row
+	 * @return
+	 */
 	public Tile getTile(int col, int row){
 		return maze[col][row];
 	}

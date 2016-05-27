@@ -31,6 +31,12 @@ public class Settings extends JPanel {
 
 	private Navigation navigator;
 	
+	/**
+	 * Constructor for settings screen.
+	 * 
+	 * @param n Central navigation class
+	 * @throws IOException
+	 */
 	public Settings(Navigation n) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
@@ -210,6 +216,13 @@ public class Settings extends JPanel {
         add(box, JPanel.CENTER_ALIGNMENT);
 	}
 	
+	/**
+	 * Helper function to create image to be drawn on JFrame.
+	 * 
+	 * @param path Image file name
+	 * @return Image 
+	 * @throws IOException
+	 */
 	protected static ImageIcon createImage(String path) throws IOException {
 		java.net.URL imgURL = Menu.class.getResource(path);
 		if (imgURL != null) {
@@ -220,6 +233,9 @@ public class Settings extends JPanel {
 		}
 	}
 	
+	/**
+	 * Draws the images onto the JFrame.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);

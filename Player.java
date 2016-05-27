@@ -48,6 +48,16 @@ public class Player {
 
 	}
 	
+	/**
+	 * Sends player back to the Start tile. This is called when
+	 * the player makes contact with a Sentry's vision.
+	 * 
+	 * @param maze Game maze
+	 * @param tileWidth tile width for drawing
+	 * @param tileHeight tile height for drawing
+	 * @param arcDist 
+	 * @param arcWidth
+	 */
 	private void reset(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -56,7 +66,7 @@ public class Player {
 		this.userRad = tileWidth/4;
 		this.xPos = maze.getTileType(START).getCol() * tileWidth  + userRad*2;
 		this.yPos = maze.getTileType(START).getRow() * tileHeight + userRad*2;
-		xFos = xPos;
+		this.xFos = xPos;
 		yFos = yPos;
 		a = (float)0.4;
 		sx = 0;
@@ -67,12 +77,13 @@ public class Player {
 	}
 	
 	/**
+	 * Calculates the player's position relative to 0, 
+	 * the top left most corner. 
 	 * 
-	 * 
-	 * @param vert
-	 * @param horz
-	 * @param maze
-	 * @return
+	 * @param vert Vertical distance from 0 
+	 * @param horz Horizontal distance from 0
+	 * @param maze Game maze
+	 * @return Updated maze
 	 */
 	public Maze move(int vert, int horz, Maze maze){
 		//friction
@@ -148,7 +159,7 @@ public class Player {
 	}
 
 	/**
-	 * 
+	 * Checks if the player is within a Sentry's line of sight.
 	 * 
 	 * @param maze
 	 */
@@ -210,6 +221,11 @@ public class Player {
 		}
 	}
 	
+	/**
+	 * Moves the player up.
+	 * 
+	 * @param maze Game maze
+	 */
 	public void up(Maze maze) {
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			yPos -= 1;
@@ -218,6 +234,11 @@ public class Player {
 		}
 	}
 
+	/**
+	 * Moves the player down.
+	 * 
+	 * @param maze Game maze
+	 */
 	public void down(Maze maze) {
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			yPos += 1;
@@ -226,6 +247,11 @@ public class Player {
 
 	}
 
+	/**
+	 * Moves the player right.
+	 * 
+	 * @param maze Game maze
+	 */
 	public void right(Maze maze) {
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
 			xPos += 1;
@@ -234,6 +260,11 @@ public class Player {
 
 	}
 
+	/**
+	 * Moves the player left.
+	 * 
+	 * @param maze Game maze
+	 */
 	public void left(Maze maze) {
 		
 		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) 
@@ -243,6 +274,14 @@ public class Player {
 			xPos++;
 
 	}
+	
+	/**
+	 * check if the player has obtained the key.
+	 * 
+	 * @param maze Game maze
+	 * @param x Player Co-ordinates
+	 * @param y Player Co-ordinates
+	 */
 	private void checkKey(Maze maze, int x, int y){
 		int leftEdge = (x - userRad)/tileWidth;  //Will round down
 		int topEdge = (y- userRad)/tileHeight; //if not perfectly divisible. :)
@@ -255,6 +294,14 @@ public class Player {
 				|| maze.tileType(bottomEdge, leftEdge)  == KEY) 
 			maze.keyOff();//this is pretty ugly but it's the easiest way to do it
 	}
+	
+	/**
+	 * Checks if the player has reached the exit.
+	 * 
+	 * @param maze Game maze
+	 * @param x Player Co-ordinates
+	 * @param y Player Co-ordinates
+	 */
 	private void checkExit(Maze maze, int x, int y){
 		int leftEdge = (x - userRad)/tileWidth;  //Will round down
 		int topEdge = (y- userRad)/tileHeight; //if not perfectly divisible. :)
@@ -269,6 +316,14 @@ public class Player {
 		
 	}
 	
+	/**
+	 * Checks if the Tile is a wall.
+	 * 
+	 * @param maze Game maze
+	 * @param x Player co-ordinates
+	 * @param y Player co-ordinates
+	 * @return Boolean result
+	 */
 	private boolean tileIsWall(Maze maze, int x, int y){
 		//checks that the player doesn't leave the maze
 		if(x < userRad || y < userRad || x >= (maze.getSize())*tileWidth-userRad || y >= (maze.getSize())*tileHeight-userRad){
@@ -288,19 +343,35 @@ public class Player {
 		return true;
 	}
 
+	/**
+	 * Get the player's x co-ordinate.
+	 * 
+	 * @return int
+	 */
 	public int getxPos() {
 		return xPos;
 	}
 
+	/**
+	 * Get the player's y coordinate.
+	 * 
+	 * @return int
+	 */
 	public int getyPos() {
 		return yPos;
 	}
 
+	/**
+	 * Get the player's radius.
+	 * 
+	 * @return int
+	 */
 	public int getUserRad(){
 		return userRad;
 	}
 
 	/**
+	 * Get the direction that the player is facing. 
 	 * 
 	 * @return One of 8 directions,
 	 * starting from north (== 0),
