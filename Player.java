@@ -43,13 +43,13 @@ public class Player {
 
 
 	/**
-	 * Constructor.
+	 * Constructor. Doesn't do anything but call reset()
 	 * 
-	 * @param maze
-	 * @param tileWidth
-	 * @param tileHeight
-	 * @param arcDist
-	 * @param arcWidth
+	 * @param maze the maze
+	 * @param tileWidth the width of a tile
+	 * @param tileHeight the height of a tile
+	 * @param arcDist the radius of the arcs that the sentries emit
+	 * @param arcWidth the angle of the arcs that the sentries emit
 	 */
 	public Player(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
 		reset(maze,tileWidth,tileHeight,arcDist,arcWidth);
@@ -57,14 +57,13 @@ public class Player {
 	}
 	
 	/**
-	 * Sends player back to the Start tile. This is called when
-	 * the player makes contact with a Sentry's vision.
+	 * Sends player back to the Start tile. This is called by the constructor or by the player when the player makes contact with a Sentry's vision.
 	 * 
-	 * @param maze Game maze
-	 * @param tileWidth tile width for drawing
-	 * @param tileHeight tile height for drawing
-	 * @param arcDist 
-	 * @param arcWidth
+	 * @param maze the maze
+	 * @param tileWidth the width of a tile
+	 * @param tileHeight the height of a tile
+	 * @param arcDist the radius of the arcs that the sentries emit
+	 * @param arcWidth the angle of the arcs that the sentries emit
 	 */
 	private void reset(Maze maze, int tileWidth, int tileHeight, int arcDist, int arcWidth){
 		this.tileWidth = tileWidth;
@@ -83,8 +82,7 @@ public class Player {
 	}
 	
 	/**
-	 * Calculates the player's position relative to 0, 
-	 * the top left most corner. 
+	 * Calculates the player's position relative to 0 every tick, the top left most corner. Note that the positions here are relative to the maze, not to the outside JFrame
 	 * 
 	 * @param vert Vertical distance from 0 
 	 * @param horz Horizontal distance from 0
@@ -158,9 +156,9 @@ public class Player {
 
 
 	/**
-	 * Checks if the player is within a Sentry's line of sight.
+	 * Checks if the player is within a Sentry's line of sight. This check is no longer pixel perfect because the player isn't a circle, but a rectangular sprite. Still, it's close enough for what we need.
 	 * 
-	 * @param maze
+	 * @param maze the maze
 	 */
 	private void checkLasers(Maze maze){
 		
@@ -180,14 +178,14 @@ public class Player {
 
 			if(Math.sqrt(Math.pow(sentry.getRow()*tileWidth+tileWidth/2-yPos,2) + Math.pow(sentry.getColumn()*tileHeight+tileHeight/2-xPos,2)) < arcDist+userRad){
 				//then see if the user is in the beam or not
-				//playerArc is the angle of the arc where the chord of the arc is the player diamater. No checking of tan's boundary conditions because we know this number to be between 0 and <180
+				//playerArc is the angle of the arc where the chord of the arc is the player diameter. No checking of tan's boundary conditions because we know this number to be between 0 and <180
 				playerArc = (float) Math.toDegrees(Math.atan((userRad/2)/(Math.sqrt(Math.pow(sentry.getRow()*tileWidth+tileWidth/2-yPos,2) + Math.pow(sentry.getColumn()*tileHeight+tileHeight/2-xPos,2)))));
 				//playerSent is the angle from the sentry to the player
 				playerSent = 0;
 				sentLocY = sentry.getRow()*tileWidth+tileWidth/2;
 				sentLocX = sentry.getColumn()*tileHeight+tileHeight/2;
 				
-				if(xPos-sentLocX == 0){
+				if(xPos-sentLocX == 0){//messing about with atan having limits and whatnot
 					if (yPos - sentLocY < 0){
 						playerSent = 90;
 					} else {
@@ -197,16 +195,16 @@ public class Player {
 					playerSent = (float)Math.toDegrees(Math.atan((float)(yPos-sentLocY)/(sentLocX-xPos)));
 				}
 
-				if (xPos-sentLocX < 0){//works around tan only doing -90 to 90
+				if (xPos-sentLocX < 0){//works around atan only doing -90 to 90
 					playerSent += 180;
 				}
 				
 				if (playerSent < 0){
 					playerSent += 360;
 				}
-				angleLow = (REALLYBIGNUMBER + sentry.getDegree()-playerArc) % 360;
+				angleLow = (REALLYBIGNUMBER + sentry.getDegree()-playerArc) % 360;//the actual value of REALLYBIGNUMBER doesn't matter as long as it's really big and divisible by 360
 				angleHigh = (REALLYBIGNUMBER + sentry.getDegree() + playerArc + arcWidth) % 360;
-				if(angleLow < angleHigh){
+				if(angleLow < angleHigh){//found this very neat way to compare angles online --tom
 					if (angleLow < playerSent && angleHigh > playerSent){
 						caught = true;
 					}
@@ -222,7 +220,7 @@ public class Player {
 	
 
 	/**
-	 * check if the player has obtained the key.
+	 * Check if the player has obtained the key. Calls keyOff (Maze class) if the key has been found
 	 * 
 	 * @param maze Game maze
 	 * @param x Player Co-ordinates
@@ -242,7 +240,7 @@ public class Player {
 	}
 	
 	/**
-	 * Checks if the player has reached the exit.
+	 * Checks if the player has reached the exit. Calls activateShrine(in Maze) if the exit has been found.
 	 * 
 	 * @param maze Game maze
 	 * @param x Player Co-ordinates
@@ -263,12 +261,12 @@ public class Player {
 	}
 	
 	/**
-	 * Checks if the Tile is a wall.
+	 * Checks if coordinates will cause the player to overlap with a wall
 	 * 
 	 * @param maze Game maze
 	 * @param x Player co-ordinates
 	 * @param y Player co-ordinates
-	 * @return Boolean result
+	 * @return Boolean true if the player hasn't collided with a tile, false otherwise.
 	 */
 	private boolean tileIsWall(Maze maze, int x, int y){
 		//checks that the player doesn't leave the maze
@@ -290,9 +288,9 @@ public class Player {
 	}
 
 	/**
-	 * Get the player's x co-ordinate.
+	 * Get the player's x coordinate.
 	 * 
-	 * @return int
+	 * @return int the player's x coordinate
 	 */
 	public int getxPos() {
 		return xPos;
@@ -301,7 +299,7 @@ public class Player {
 	/**
 	 * Get the player's y coordinate.
 	 * 
-	 * @return int
+	 * @return int the player's y coordinate.
 	 */
 	public int getyPos() {
 		return yPos;
@@ -322,7 +320,7 @@ public class Player {
 	 * @return One of 8 directions,
 	 * starting from north (== 0),
 	 * going clockwise.
-	 * 0 indicates stationary.
+	 * 4 (south) is default.
 	 */
 	public int getDirection(){
 		if(fx == 0){
@@ -349,7 +347,7 @@ public class Player {
 			else if (fy < 0)
 				return 7; //nw
 		}
-		return 0;//8;//just in case
+		return 4;//8;//just in case
 	}
 	
 	public boolean isCaught() {

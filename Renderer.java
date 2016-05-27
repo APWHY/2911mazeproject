@@ -76,9 +76,18 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			private String timerPadding = "          "; //Can't get struts to cooperate :(
 			private Navigation navigator;
 	
+	/**
+	 * Constructor for the Renderer class. Gets a new maze, a new player, a new timer, calls sideBar() and adds eventListeners for mouse and keyboard
+	 * 
+	 * @param n the navigator (used for Pause and End Game screens)
+	 * @param width the width of the window
+	 * @param height the height of the window
+	 * @param NUMSEN the number of sentries passed to it from Settings (through Navigation)
+	 * @param DIFF the difficulty of the maze (passed the same way as NUMSEN)
+	 */
 	public Renderer(Navigation n, int width, int height,int NUMSEN, int DIFF){
 		navigator = n;
-		Color bg2 = new Color(172,230,250);
+		Color bg2 = new Color(172,230,250);//don't ask what happened to bg1 we don't talk about it
 		this.setBackground(bg2);
 		this.vert = this.horz = this.tick = 0; 
 		this.setVisible(true);
@@ -92,7 +101,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		try {
 			this.sprites = getSprites();
 		} catch (IOException e1) {
-			// incase the sprites aren't there for some reason idk
+			// in case the sprites aren't there for some reason idk
 			e1.printStackTrace();
 		}
 		try {
@@ -103,9 +112,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		
 		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
-		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
-		//Tom -- we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
-		//we also don't need framewidth and frameheight for the same reasons
+		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH);
+		//we don't pass OFFSET because we just add OFFSET to the player coordinates -- it's not relevant to the player
+		//we also don't need frameWidth and frameHeight for the same reasons
 		
 		fpsTimer = new Timer(FPS, this);
 		fpsTimer.setRepeats(true);
@@ -118,7 +127,11 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		sideBar();
 
 	}
-	private void sideBar(){//just puts the code for the sidebar somewhere else
+	/**
+	 * Makes the stuff you see to the right of the maze, namely, the two timers and their text labels and the pause button
+	 * 
+	 */
+	private void sideBar(){//just puts the code for the side bar somewhere else
 		//adding Pause button & timer counter
 		try {
 			pause = new JButton(createImage("pauseP.png"));
@@ -186,29 +199,21 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 
 
 	/**
+	 * Updates the game (called from the actionPerformed function attached to fpsTimer FPS times a second). Updates the Maze (mainly sentry degrees) and then player movement
 	 * 
-	 * 
-	 * @param vert
-	 * @param horz
-	 * @param tickthis.maze, 
+	 * @param vert -1 if down pressed, 1 if up pressed, 0 otherwise
+	 * @param horz -1 if right pressed, 1 if left pressed, 0 otherwise 
 	 */
-	public void updateGame(int vert, int horz, int tick){
+	private void updateGame(int vert, int horz){
 		maze.updateMaze();
 		maze = player.move(vert , horz, this.maze);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public Maze getMaze(){
-		return maze;
-	}
 
 	/**
+	 * Calls all important drawing functions (drawMaze, drawSentries, drawPlayer) and also handles the screen wipe when a maze is completed. Uses the buffer canvas for smoother performance. Called from overridden paintComponent
 	 * 
-	 * 
-	 * @param g
+	 * @param g the graphics instance (from overridden paintComponent)
 	 */
 	private void drawFrame(Graphics g){
 		Graphics cg = canvas.getGraphics();
@@ -235,9 +240,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	/**
+	 * Draws the maze. Called from drawFrame
 	 * 
-	 * 
-	 * @param g
+	 * @param g the graphics instance (from overridden paintComponent)
 	 */
 	private void drawMaze(Graphics g){
 		for (int m = 0; m < this.maze.getSize(); m++){
@@ -265,10 +270,11 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 
 	}
 	
-	//Edited by Irfan
+
 	/**
+	 * Draws the player. Called from drawFrame
 	 * 
-	 * @param g
+	 * @param g the graphics instance (from overridden paintComponent)
 	 */
 	private void drawPlayer(Graphics g){ // it's more OOP for this function to be in renderer
 		//draws a circle around the player at start of maze
@@ -282,9 +288,9 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	/**
+	 * Draws all the sentries. Called from drawFrame
 	 * 
-	 * 
-	 * @param g
+	 * @param g the graphics instance (from overridden paintComponent)
 	 */
 	private void drawSentries(Graphics g){
 		
@@ -309,6 +315,12 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	
+	/**
+	 * Finds the spritesheet (stored in the root directory) for everything but the player and splits it up into a 2D-array for later use before returning it.
+	 * 
+	 * @return the 2D array of individual sprites 
+	 * @throws IOException
+	 */
 	private BufferedImage[][] getSprites() throws IOException{
 		BufferedImage bigImg = ImageIO.read(new File("fixedsprites.bmp"));
 		int spriteCols = 7;
@@ -327,6 +339,12 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		return newSprites;
 	}
 	
+	/**
+	 * Finds the spritesheet (stored in the root directory) for the player and splits it up into a 1D-array for later use before returning it.
+	 * 
+	 * @return the 2D array of individual sprites for the player
+	 * @throws IOException
+	 */
 	private BufferedImage[][] getPlayerSprites() throws IOException{
 		BufferedImage bigImg = ImageIO.read(new File("playerSoldier.png"));
 		int spriteCols = 8;
@@ -344,7 +362,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	/**
-	 * 
+	 * Overridden so we can take control of the Graphics instance. Called using repaint() which is then called FPS times a second through the actionPerformed function attatched to fpsTimer
 	 */
 	@Override
 	protected void paintComponent(Graphics g){ 
@@ -353,7 +371,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	/**
-	 * 
+	 * Empty implementation -- does nothing
 	 */
 	@Override
 	public void keyTyped(KeyEvent e) {	
@@ -361,7 +379,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	//Edited by Irfan.
 	/**
-	 * 
+	 * Changes vert and horz based on what keys have been pressed. We don't use keyTyped because it behaves oddly when buttons are held down
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {	//useful
@@ -384,7 +402,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	}
 	
 	/**
-	 * 
+	 * Resets vert and horz when keys are released
 	 */
 	@Override
 	public void keyReleased(KeyEvent e) {	
@@ -403,28 +421,45 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 	}
 	
-	
+	/**
+	 * Empty implementation -- does nothing
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
 	}
+	/**
+	 * Empty implementation -- does nothing
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {	
 	}
+	/**
+	 * Empty implementation -- does nothing
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {	
 	}
+	/**
+	 * Empty implementation -- does nothing
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {	
 	}
+	/**
+	 * Empty implementation -- does nothing
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {	
 	}
+	/**
+	 * Gets called FPS times a second. Used to maintain a stable frame rate for drawing and game updates 
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e){
 		if (navigator.getShowing() == this){
 			tick = (tick + 1) % TICKRATE;
-			updateGame(vert,horz,tick);
+			updateGame(vert,horz);
 			if(tick == 0 && navigator.isPaused() == false){
 				this.timer.incrementSecond();
 				this.timerDisplay.setText(timerPadding + this.timer.getTime());
@@ -442,7 +477,13 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			repaint();	
 		}
 	}
-	
+	/**
+	 * Helper function to create image to be drawn on JFrame.
+	 * 
+	 * @param path Image file name
+	 * @return Image 
+	 * @throws IOException
+	 */
 	protected static ImageIcon createImage(String path) throws IOException {
 		java.net.URL imgURL = Menu.class.getResource(path);
 		if (imgURL != null) {
@@ -452,24 +493,14 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			return null;
 		}
 	}
-	
-	public int getStart() {
-		return start;
+	/**
+	 * Gets the maze stored in Renderer
+	 * 
+	 * @return the maze
+	 */
+	public Maze getMaze(){
+		return maze;
 	}
 
-	public void setStart(int start) {
-		this.start = start;
-	}
 
-	public int getEnd() {
-		return end;
-	}
-
-	public void setEnd(int end) {
-		this.end = end;
-	}
-
-	public int getARCWIDTH() {
-		return ARCWIDTH;
-	}
 }

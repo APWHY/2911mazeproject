@@ -22,13 +22,13 @@ import javax.swing.JPanel;
 public class Endscreen extends JPanel{
 	
 	//class variables
-	private JButton reset;
-	private JButton menu;
-	private JLabel timerDisplay;
-	private Navigation navigator;
+		private JButton reset;
+		private JButton menu;
+		private JLabel timerDisplay;
+		private Navigation navigator;
 	
 	/**
-	 * Constructor for end game screen. Also does all the drawing since the screen is static apart from the rolloverIcons
+	 * Constructor for the end game screen. Also does all the drawing since the screen is static apart from the rolloverIcons.
 	 * 
 	 * @param n Central navigation screen
 	 * @param timer Timer with time value to be displayed

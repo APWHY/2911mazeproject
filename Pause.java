@@ -19,10 +19,10 @@ import javax.swing.JPanel;
 public class Pause extends JPanel{
 	
 	//class variables
-	private JButton unpause;
-	private JButton reset;
-	private JButton menu;
-	private Navigation navigator;
+		private JButton unpause;
+		private JButton reset;
+		private JButton menu;
+		private Navigation navigator;
 
 	/**
 	 * Constructor for pause screen.

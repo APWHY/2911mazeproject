@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,11 +20,12 @@ import javax.swing.JPanel;
 public class HowToPlay extends JPanel {
 	
 	//class variables
-	private JButton menu;
-	private Navigation navigator;
+		private JButton menu;
+		private Navigation navigator;
 	
 	
 	/**
+	 * Constructor for the instructions screen. Also does all the drawing since the screen is static apart from the rolloverIcons.
 	 * @param n Central navigation screen
 	 * @throws IOException
 	 */

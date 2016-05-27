@@ -31,6 +31,11 @@ public class Navigation {
 			private int diff;
 
 	
+	/**
+	 * Constructor of the class. Doesn't do much other than making the JFrame that contains the program by calling startWindow().
+	 * 
+	 * @throws IOException 
+	 */
 	public Navigation() throws IOException {
 		numSen = 3; //just some default starting variables 
 		diff = 15;
@@ -39,6 +44,11 @@ public class Navigation {
 
 	
 
+	/**
+	 * Makes the JFrame for the program.
+	 * 
+	 * @throws IOException
+	 */
 	private void startWindow() throws IOException{
 		//display = new Display Menu();
 		
@@ -58,6 +68,12 @@ public class Navigation {
 	}
 
 	
+	/**
+	 * This is the main function. Doesn't do anything other than create an instance of this class and call showMenu()
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException{
 		Navigation gameWindow = new Navigation();
 		//System.out.println(gameWindow.current.getComponent(1));
@@ -66,6 +82,10 @@ public class Navigation {
 		gameWindow.showMenu();
 	}
 	
+	/**
+	 * This function displays the main menu by calling on the Menu class
+	 * 
+	 */
 	public void showMenu() {
 		//screen = new Renderer(WWID,WHEI);
 		try {
@@ -79,7 +99,10 @@ public class Navigation {
 	}
 	
 	 
-//shows game
+	/**
+	 * This function displays the game by calling on the Renderer class
+	 * 
+	 */
 	public void showGame() {
 		screen = new Renderer(this,WWID,WHEI, numSen, diff);
 		screen.setVisible(true);
@@ -87,7 +110,11 @@ public class Navigation {
 		setCurrentFrame(screen);
 	}
 	
-	//Shows the settings screen	 
+ 
+	/**
+	 * This function displays the settings screen by calling on the Settings class
+	 * 
+	 */
 	public void showSettings() {
 		try {
 			s = new Settings(this);
@@ -98,7 +125,11 @@ public class Navigation {
 		setCurrentFrame(s);
 	}
 	
-	//Shows how to play screen
+
+	/**
+	 * This function displays the instructions screen by calling on the HowToPlay class
+	 * 
+	 */
 	public void showHowToPlay() {
 		try {
 			h = new HowToPlay(this);
@@ -111,9 +142,9 @@ public class Navigation {
 	
 	
 	/**
-	 * Opens pause screen
-	 * @param type
-	 * @param diff
+	 * This function displays the pause screen by calling on the Pause class
+	 * 
+	 * 
 	 */
 	public void showPause() {
 		try {
@@ -128,6 +159,8 @@ public class Navigation {
 	
 	/**
 	 * Closes pause screen and returns to game
+	 * 
+	 * 
 	 */
 	public void unPause() {
 		p.setVisible(false);
@@ -137,7 +170,9 @@ public class Navigation {
 	}
 	
 	/**
-	 * Shows Endscreen
+	 * This function displays the end of game screen by calling on the EndScreen class
+	 * 
+	 * 
 	 */
 	public void showEndScreen(TimerDisplay timer) {
 		try {
@@ -151,8 +186,8 @@ public class Navigation {
 	}
 	
 	/***
-	 * Sets the displayed screen to the screen that is passed in
-	 * @param screen
+	 * Sets the displayed screen to the screen that is passed in and removes all other components from the JFrame
+	 * @param screen the screen that we're making the current JPanel
 	 */
 	private void setCurrentFrame(Component view) {
 
@@ -172,35 +207,49 @@ public class Navigation {
 	}
 
 
+	/**
+	 * Get the panel that is currently being displayed
+	 * 
+	 * @return the current screen
+	 */
 	public Component getShowing() {
 		return showing;
 	}
 
+	/**
+	 * Get the renderer instance
+	 * 
+	 * @return the renderer instance
+	 */
 	public Renderer getRenderer(){
 		return screen;
 	}
 
+	/**
+	 * Find out whether or not the game is paused
+	 * 
+	 * @return true if it is paused and false otherwise
+	 */
 	public boolean isPaused() {
 		return paused;
 	}
 
-	public void setPaused(boolean paused) {
-		this.paused = paused;
-	}
-
-	public int getNumSen() {
-		return numSen;
-	}
-
+	/**
+	 * Sets the number of sentries in the game (called from Settings class) and returns the navigator to the settings screen
+	 * 
+	 * @param numSen the number of sentries in the game
+	 */
 	public void setNumSen(int numSen) {
 		this.numSen = numSen;
 		showSettings();
 	}
 
-	public int getDiff() {
-		return diff;
-	}
 
+	/**
+	 * Sets the difficulty (number of allowed empty tiles) of the game (called from Settings class) and returns the navigator to the settings screen
+	 * 
+	 * @param diff the difficulty of the game
+	 */
 	public void setDiff(int diff) {
 		this.diff = diff;
 		showSettings();

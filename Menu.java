@@ -20,11 +20,11 @@ import javax.swing.JPanel;
 public class Menu extends JPanel{
 	
 	//class variables
-	private JButton play;
-	private JButton settings;
-	private JButton howtoplay;
-	private Navigation navigator;
-	
+		private JButton play;
+		private JButton settings;
+		private JButton howtoplay;
+		private Navigation navigator;
+		
 	/**
 	 * Constructor for main menu screen.
 	 * 
