@@ -195,6 +195,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		add(box);
 	}
 	
+	
 	public int getStart() {
 		return start;
 	}

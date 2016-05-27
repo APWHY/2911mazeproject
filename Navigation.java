@@ -24,7 +24,6 @@ public class Navigation {
 	private final int WWID = 1000;//window width and height
 	private final int WHEI = 800;
 
-	//pause timer
 	private boolean paused = false;
 	
 	public Navigation() throws IOException {
@@ -101,8 +100,10 @@ public class Navigation {
 	 
 //shows game
 	public void showGame() {
+		screen = null;
 		screen = new Renderer(this,WWID,WHEI, numSen, diff);
 		screen.setVisible(true);
+		this.paused = false;
 		setCurrentFrame(screen);
 	}
 	
@@ -150,9 +151,10 @@ public class Navigation {
 	 */
 	public void unPause() {
 		p.setVisible(false);
+		this.paused = false;
 		screen.setVisible(true);
 		setCurrentFrame(screen);
-		this.paused = false;
+
 	}
 	
 	/**
