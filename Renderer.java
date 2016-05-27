@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,8 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -22,73 +19,73 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/**
+ * This class is responsible for displaying the game. All logic is performed in other classes -- this class only handles drawing after requesting the required information from the player, maze, sentry and TimerDisplay classes
+ *
+ */
 @SuppressWarnings("serial")
 public class Renderer extends JPanel implements ActionListener, MouseListener, KeyListener {
+	//Class constants
+		private final int STARTSIZE = 100; //sets the size of the circle that surrounds the player when a new maze is started
+		//Maze drawing related constants
+			private final int RWID = 24, RHEI = 24; // Must be divisible by 4
+			private final int SPRITESIZE = 16;//size of the sprites
+			private final int MAZESIZE = 30;
+			private int OFFSET = (int)(RWID/2);
+			//Pseudo-constants, only changed in the constructor
+				private int NUMSEN, DIFF; //settings obtained from Navigation
+			
+		//Tile status definitions -- ones commented out are simply not used in the code	
+			private static final int EMPTY = 0;
+			private static final int FLOOR = 1;
+			private static final int WALL  = 2;
+			private static final int START = 3;
+			private static final int EXIT  = 4;
+			//private static final int SENTRY  = 5; //-- this isn't actually used by renderer because it asks Maze where the sentries are directly
+			private static final int KEY = 6;
+			
+		//Sentry Arc constants	
+			private final int ARCDIST = (int)(RWID*1.3);
+			private final int ARCWIDTH = 45;			
+			
+		//Timer related constants	
+			private final int FPS = 1000/60;
+			private final int TICKRATE = 60; //number of frames for one second
+			private final int STARTTIME = 120;
 	
-	// Game related variables
-	private Maze maze;
-	private int colSet,colFlag;
-	private Player player;
-	private int vert, horz,tick;
-	private int WID,HEI,OFFSET;
-	int start, end;
-	int numSen, diff;
 	
-	// Graphics related variables
-	BufferedImage canvas;
-	BufferedImage[][] sprites;
-	BufferedImage[][] playerSprites;
-	//BufferedImage playerSprite;
-	//BufferedImage img = null;
+	//Class variables		
+		private Timer fpsTimer;
+		// Game related variables
+			private Maze maze;
+			private Player player;
+			private int vert, horz; //direction indicators to send to player class from keyEventListener
+			private int tick; //ticks once a second						
+			private int start, end; //determine size of transition graphics when a maze is started and ended
 
+		// Graphics related variables
+			BufferedImage canvas;
+			BufferedImage[][] sprites;
+			BufferedImage[][] playerSprites;
 
+		// Buttons + Navigation
+			private JButton pause;
+			private TimerDisplay timer;
+			private JLabel timerDisplay;
+			private JLabel bonusDisplay;
+			private String timerPadding = "          "; //Can't get struts to cooperate :(
+			private Navigation navigator;
 	
-	// Constants
-	private final int RWID = 24, RHEI = 24; // Must be divisible by 4
-	private final int SPRITESIZE = 16;//size of the sprites
-	private final int MAZESIZE = 30;
-	
-	private static final int EMPTY = 0;
-	private static final int FLOOR = 1;
-	private static final int WALL  = 2;
-	private static final int START = 3;
-	private static final int EXIT  = 4;
-	private static final int SENTRY  = 5;
-	private static final int KEY = 6;
-	
-	private final int ARCDIST = (int)(RWID*1.3);
-	private final int ARCWIDTH = 45;
-	private final int STARTSIZE = 100;
-	
-	private final int FPS = 1000/60;
-	private final int TICKRATE = 60; //number of frames for one second
-	private final int STARTTIME = 120;
-	private Timer fpsTimer;
-	
-	// Buttons + Navigation
-	private JButton pause;
-	private TimerDisplay timer;
-	private JLabel timerDisplay;
-	private JLabel bonusDisplay;
-	private String timerPadding = "          "; //Can't get struts to cooperate :(
-	private Navigation navigator;
-	
-	public Renderer(Navigation n, int width, int height,int numSen, int diff){
+	public Renderer(Navigation n, int width, int height,int NUMSEN, int DIFF){
 		navigator = n;
-		Color bg = new Color(112,200,160);
 		Color bg2 = new Color(172,230,250);
 		this.setBackground(bg2);
-		this.vert = this.horz = this.tick = 0;
-		this.WID = width;
-		this.HEI = height;
-		this.OFFSET = (int)(RWID/2); 
-		this.colSet = 150;
-		this.colFlag = 1;
+		this.vert = this.horz = this.tick = 0; 
 		this.setVisible(true);
 		this.setFocusable(true);
-		this.numSen = numSen;
-		this.diff = diff;
-		this.maze = new Maze(this.MAZESIZE, numSen, diff);
+		this.NUMSEN = NUMSEN;
+		this.DIFF = DIFF;
+		this.maze = new Maze(this.MAZESIZE, NUMSEN, DIFF);
 		this.timer = new TimerDisplay(STARTTIME);
 		start = STARTSIZE;
 		end = 0;
@@ -104,7 +101,6 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			System.err.println("Something wrong with player sprites.");
 		}
 		
-		//this.playerSprite = new ImageIO.read(new File("tempPlayer.png"));
 		
 		this.canvas = new BufferedImage(this.RWID * this.MAZESIZE, this.RHEI * this.MAZESIZE, BufferedImage.TYPE_3BYTE_BGR);
 		this.player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH); //Irfan
@@ -119,8 +115,11 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		addMouseListener(this); // ???
 		//to whoever put the ??? marks there those are needed to make sure that the game listens to key and mouse strokes --tom
 		
-		
-		//adding Pause button & timer counter??
+		sideBar();
+
+	}
+	private void sideBar(){//just puts the code for the sidebar somewhere else
+		//adding Pause button & timer counter
 		try {
 			pause = new JButton(createImage("pauseP.png"));
 		} catch (IOException e) {
@@ -153,14 +152,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		timerDisplay.setText(timerPadding + this.timer.getTime());
 		timerDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
 		timerDisplay.setForeground(Color.DARK_GRAY);
-		//timerDisplay.setBackground(Color.CYAN);
-		//timerDisplay.setOpaque(true);
 		timerDisplay.setVisible(true);
-		//timerDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
-		//timerDisplay.setLocation(100, 100);
-		//timerDisplay.setBounds(200, 200, 100, 100);
-		//add(timerDisplay);
-		//timerDisplay.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		
 		JLabel bonusText = new JLabel();
 		bonusText.setText(timerPadding + "Bonus left: ");
@@ -172,16 +164,13 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		bonusDisplay.setFont(new Font("Rockwell", Font.BOLD, 30));
 		bonusDisplay.setForeground(Color.DARK_GRAY);
 		bonusDisplay.setVisible(true);
-		
-		
-		
+			
 		Box box = Box.createHorizontalBox();
 		box.add(Box.createHorizontalStrut(725));
 		
 		Box VerBox = Box.createVerticalBox();
 
 		VerBox.add(Box.createVerticalStrut(10));
-		//VerBox.add(Box.createHorizontalStrut(100)); //added whitespace padding instead.
 		VerBox.add(timerText);
 		VerBox.add(timerDisplay);
 		VerBox.add(bonusText);
@@ -194,27 +183,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		box.add(VerBox);
 		add(box);
 	}
-	
-	
-	public int getStart() {
-		return start;
-	}
 
-	public void setStart(int start) {
-		this.start = start;
-	}
-
-	public int getEnd() {
-		return end;
-	}
-
-	public void setEnd(int end) {
-		this.end = end;
-	}
-
-	public int getARCWIDTH() {
-		return ARCWIDTH;
-	}
 
 	/**
 	 * 
@@ -255,7 +224,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			cg.fillRect(0, 0, (RWID)*MAZESIZE-end, (RWID)*MAZESIZE);
 			end = end - 10;
 			if(end <= 0){
-				maze = new Maze(this.MAZESIZE, numSen, diff);
+				maze = new Maze(this.MAZESIZE, NUMSEN, DIFF);
 				player = new Player(this.maze, this.RWID, this.RHEI, this.ARCDIST, this.ARCWIDTH);
 				start = STARTSIZE;
 			}
@@ -293,15 +262,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			}
 		}
 		
-		this.colSet = this.colSet + this.colFlag;
-		
-		if (this.colSet > 200){
-			this.colFlag = -1;
-		}
-		
-		if (this.colSet < 150){
-			this.colFlag = 1;
-		}
+
 	}
 	
 	//Edited by Irfan
@@ -317,12 +278,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			start--;
 		}
 		// Tom -- bit messy but we're putting player x and y coordinate in the center because he's a dot. If he becomes a sprite I'll change it back
-		// original
-		// g.fillOval(player.getxPos()+OFFSET, player.getyPos()+OFFSET, player.getUserRad(), player.getUserRad());
-		//g.fillOval(this.player.getxPos()-(this.player.getUserRad()), this.player.getyPos()-(this.player.getUserRad()), this.player.getUserRad()*2, this.player.getUserRad()*2);
 		g.drawImage(this.playerSprites[this.player.getDirection()][0], this.player.getxPos()-15, this.player.getyPos()-20, this.player.getxPos()+15, this.player.getyPos()+10, 1, 1, 20, 20, this);
-		//g.drawImage(sprites[5][0], sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), (1+sentry.getColumn())*(this.RWID), (1+sentry.getRow())*(this.RHEI), 1,1, 15,15, this);
-
 	}
 	
 	/**
@@ -334,15 +290,11 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 		
 		for(Sentry sentry: this.maze.getSentries()){
 			
-			//g.setColor(Color.BLACK);
 			g.drawImage(sprites[5][0], sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), (1+sentry.getColumn())*(this.RWID), (1+sentry.getRow())*(this.RHEI), 1,1, 15,15, this);
-			//g.fillOval(sentry.getColumn()*(this.RWID), sentry.getRow()*(this.RHEI), this.RWID, this.RHEI);
 			g.setColor(Color.ORANGE);
 			
 			int centX = sentry.getColumn()*(this.RWID) + this.RWID/2;
 			int centY = sentry.getRow()*(this.RHEI) + this.RHEI/2;		
-//			g.fillArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 , this.ARCDIST*2 , sentry.getDegree(), this.ARCWIDTH);
-//			g.setColor(Color.BLACK);
 			for(int n = 0; n <= this.ARCDIST; n = n + 4 ){
 				g.fillArc(centX - this.ARCDIST, centY - this.ARCDIST, this.ARCDIST*2 - 2*n, this.ARCDIST*2 - 2*n, sentry.getDegree(), this.ARCWIDTH);
 				centX += 4;
@@ -395,7 +347,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	 * 
 	 */
 	@Override
-	protected void paintComponent(Graphics g){ // Why is this protected? private?
+	protected void paintComponent(Graphics g){ 
 		super.paintComponent(g);
 		this.drawFrame(g);
 	}
@@ -453,7 +405,7 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 	
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {	//useful
+	public void mouseClicked(MouseEvent e) {
 
 	}
 	@Override
@@ -499,5 +451,25 @@ public class Renderer extends JPanel implements ActionListener, MouseListener, K
 			System.err.println("Couldn't find file: " + path);
 			return null;
 		}
+	}
+	
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	public int getARCWIDTH() {
+		return ARCWIDTH;
 	}
 }

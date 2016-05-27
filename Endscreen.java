@@ -14,17 +14,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+/**
+ * This class is responsible for the display of the end game screen, seen when your time in game runs out.
+ *
+ */
 @SuppressWarnings("serial")
 public class Endscreen extends JPanel{
 	
+	//class variables
 	private JButton reset;
 	private JButton menu;
 	private JLabel timerDisplay;
 	private Navigation navigator;
-	private TimerDisplay t;
 	
 	/**
-	 * Constructor for end game screen.
+	 * Constructor for end game screen. Also does all the drawing since the screen is static apart from the rolloverIcons
 	 * 
 	 * @param n Central navigation screen
 	 * @param timer Timer with time value to be displayed
@@ -33,7 +37,6 @@ public class Endscreen extends JPanel{
 	public Endscreen(Navigation n, TimerDisplay timer) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
-		t = timer;
 		// Create buttons with icons in them + hover images
 		reset = new JButton(createImage("replayP.png"));
 		reset.setRolloverEnabled(true);
@@ -134,7 +137,7 @@ public class Endscreen extends JPanel{
 	}
 	
 	/**
-	 * Draws the images onto the JFrame.
+	 * Overridden -- Draws the images onto the JFrame.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {

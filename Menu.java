@@ -12,10 +12,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
+/**
+ * This class is responsible for the display of the menu, seen when you start up the game
+ *
+ */
 @SuppressWarnings("serial")
 public class Menu extends JPanel{
 	
+	//class variables
 	private JButton play;
 	private JButton settings;
 	private JButton howtoplay;
@@ -136,7 +140,7 @@ public class Menu extends JPanel{
 	}
 	
 	/**
-	 * Draws the images onto the JFrame.
+	 * Overridden -- Draws the images onto the JFrame.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {

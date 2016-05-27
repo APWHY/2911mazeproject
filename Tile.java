@@ -1,19 +1,26 @@
 
+/**
+ * This class contains everything to do with one specific tile in the maze. Most importantly, it contains the type and the location in the sprite matrix (in renderer) where you can find the correct sprite for that tile
+ *
+ */
 public class Tile {
 
-	// Constants -- Might not need as type is set during maze generation.
-	private static final int EMPTY = 0;
-	private static final int FLOOR = 1;
-	private static final int WALL  = 2;
-	private static final int START = 3;
-	private static final int EXIT  = 4;
+	//Class Constants -- Only Empty is needed here, because the others aren't used in this class
+		//Tile status definitions -- ones commented out are simply not used in the code	
+			private static final int EMPTY = 0;
+			//private static final int FLOOR = 1;
+			//private static final int WALL  = 2;
+			//private static final int START = 3;
+			//private static final int EXIT  = 4;
+			//private static final int SENTRY  = 5;
+			//private static final int KEY = 6;
 	
-	private int row;
-	private int col;
-	private Tile prev; // Not currently in use
-	private int type; // Not used by own class
-	private int imgCol;
-	private int imgRow;
+	//class variables
+		private int row;
+		private int col;
+		private int type; 
+		private int imgCol; //hold the type of sprite for Renderer to show --tom
+		private int imgRow;
 	
 	/**
 	 * Constructor.
@@ -107,22 +114,7 @@ public class Tile {
 		return this.row;
 	}
 
-	/**
-	 * Set a prev Tile. Can be used to make paths.
-	 * 
-	 * @param prev Prev Tile
-	 */
-	public void setPrev(Tile prev) {
-		this.prev = prev;
-	}
 
-	/**
-	 * Get the Prev Tile.
-	 * 
-	 * @return Tile
-	 */
-	public Tile getPrev() {
-		return prev;
-	}
+
 	
 }

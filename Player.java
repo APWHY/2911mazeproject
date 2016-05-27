@@ -1,38 +1,46 @@
 import java.util.ArrayList;
-import javax.swing.JFrame;
 
+
+/**
+ * This class handles all player information AND interactions with the game (maze, sentries etc.), the most important of which are the collision checks
+ *
+ */
 public class Player {
 
-	// Constants
-	private static final int EMPTY = 0;
-	private static final int FLOOR = 1;
-	private static final int WALL  = 2;
-	private static final int START = 3;
-	private static final int EXIT  = 4;
-	private static final int SENTRY  = 5;	
-	private static final int KEY = 6;
+	//class constants
+		private static final int REALLYBIGNUMBER = 36000; //it's a really big number....that happens to be divisible by 360
+		private final int SPEED = 3; //this holds the maximum speed the player can travel at.
 	
-	private static final int REALLYBIGNUMBER = 36000;
-	private final int SPEED = 3; //this is actually maxspeed
+		//Tile status definitions -- ones commented out are simply not used in the code
+			//private static final int EMPTY = 0;
+			//private static final int FLOOR = 1;
+			private static final int WALL  = 2;
+			private static final int START = 3;
+			private static final int EXIT  = 4;
+			//private static final int SENTRY  = 5;
+			private static final int KEY = 6;
 	
-	private int xPos;
-	private int yPos;
-	private float xFos;
-	private float yFos;
 	
-	private int tileWidth;
-	private int tileHeight;
-	private int arcDist;
-	private int arcWidth;
-	
-	private float a;
-	private int sx;
-	private int sy;
-	private float fx;
-	private float fy;
+	//class variables
+		private int userRad; //collision is done assuming the player is a circle. It's not 100% perfect but it does a pretty good job
+							 //This is mainly because the player used to be a circle and the collision checks were pixel perfect, but now we use a sprite
+		private boolean caught;//by the sentry, see
+		
+		//positional variables
+			private int xPos;	//holds the rounded x position of the player for renderer to use
+			private int yPos;
+			private float xFos; //holds the true x position of the player
+			private float yFos;
+			private float a; //actually pseudoconstant -- doesn't change after constructor chooses it.
+			private float fx; //holds x-component of speed
+			private float fy;
+		
+		//collision variables -- used to help with collision checks
+			private int tileWidth;
+			private int tileHeight;
+			private int arcDist;
+			private int arcWidth;
 
-	private int userRad; //Tom -- using radius instead since it's a circle
-	private boolean caught;
 
 	/**
 	 * Constructor.
@@ -69,8 +77,6 @@ public class Player {
 		this.xFos = xPos;
 		yFos = yPos;
 		a = (float)0.4;
-		sx = 0;
-		sy = 0;
 		fx = 0;
 		fy = 0;
 		this.caught = false;
@@ -86,35 +92,30 @@ public class Player {
 	 * @return Updated maze
 	 */
 	public Maze move(int vert, int horz, Maze maze){
-		//friction
+		//friction calcs
 		if(Math.abs(.2*(fy)/Math.abs(fy))> Math.abs(fy) && vert == 0) fy = 0;
 		if(Math.abs(.2*(fx)/Math.abs(fx))> Math.abs(fx) && horz == 0) fx = 0;
 		if (fy != 0) fy = (float) (fy - .2*(fy)/Math.abs(fy));	
 		if (fx != 0) fx = (float) (fx - .2*(fx)/Math.abs(fx));
 		
 		//vector calcs
-		if(vert == 1){
+		if(vert == 1){//up pressed
 			fy = fy - a;
-		//	this.up(maze);
-//			System.out.println("up" );
 		}
 		
-		if(vert == -1){
+		if(vert == -1){//down pressed
 			fy = fy + a;
-		//	this.down(maze);
-//			System.out.println("down" );
+
 		}
 		
-		if(horz == 1){
+		if(horz == 1){//left pressed
 			fx = fx - a;
-		//	this.left(maze);
-//			System.out.println("left" );
+
 		}
 		
-		if(horz == -1){
+		if(horz == -1){//right pressed
 			fx = fx + a;
-		//	this.right(maze);
-//			System.out.println("right" );
+
 		}
 		//maxspeed calcs
 		if(Math.abs(fy) > SPEED){
@@ -123,7 +124,7 @@ public class Player {
 		if(Math.abs(fx) > SPEED){
 			fx = (Math.abs(fx)/fx)*SPEED;
 		}
-		//collision checks
+		//collision checks with maze
 		for(int i = 0; i < Math.abs(fy) && !tileIsWall(maze, Math.round(xFos), Math.round(yFos)); i++)
 			yFos =  (yFos + (fy)/Math.abs(fy));
 		if(tileIsWall(maze, Math.round(xFos), Math.round(yFos))){
@@ -145,7 +146,7 @@ public class Player {
 		}else{
 			this.checkExit(maze, xPos, yPos);
 		}
-		this.checkLasers(maze);
+		this.checkLasers(maze); //collision checks with sentries
 		
 		if(caught){
 			reset(maze,tileWidth,tileHeight,arcDist,arcWidth);
@@ -154,9 +155,7 @@ public class Player {
 		return maze;
 	}
 	
-	public boolean isCaught() {
-		return caught;
-	}
+
 
 	/**
 	 * Checks if the player is within a Sentry's line of sight.
@@ -221,60 +220,7 @@ public class Player {
 		}
 	}
 	
-	/**
-	 * Moves the player up.
-	 * 
-	 * @param maze Game maze
-	 */
-	public void up(Maze maze) {
-		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
-			yPos -= 1;
-		if(tileIsWall(maze, xPos, yPos)){
-			yPos++;
-		}
-	}
 
-	/**
-	 * Moves the player down.
-	 * 
-	 * @param maze Game maze
-	 */
-	public void down(Maze maze) {
-		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
-			yPos += 1;
-		if(tileIsWall(maze, xPos, yPos))
-			yPos--;
-
-	}
-
-	/**
-	 * Moves the player right.
-	 * 
-	 * @param maze Game maze
-	 */
-	public void right(Maze maze) {
-		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++)
-			xPos += 1;
-		if(tileIsWall(maze, xPos, yPos))
-			xPos--;
-
-	}
-
-	/**
-	 * Moves the player left.
-	 * 
-	 * @param maze Game maze
-	 */
-	public void left(Maze maze) {
-		
-		for(int i = 0; i < SPEED && !tileIsWall(maze, xPos, yPos); i++) 
-			xPos -= 1;
-		
-		if(tileIsWall(maze, xPos, yPos)) 
-			xPos++;
-
-	}
-	
 	/**
 	 * check if the player has obtained the key.
 	 * 
@@ -404,5 +350,9 @@ public class Player {
 				return 7; //nw
 		}
 		return 0;//8;//just in case
+	}
+	
+	public boolean isCaught() {
+		return caught;
 	}
 }

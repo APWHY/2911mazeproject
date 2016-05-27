@@ -1,11 +1,15 @@
 import java.util.Random;
 
+/**
+ * This class handles everything to do with one sentry in the maze, including the degree at which it is looking at
+ *
+ */
 public class Sentry {
-	
-	private int row; 
-	private int col;
-	private int degree;
-	private int rotSpeed;
+	//class variables
+		private int row; 
+		private int col;
+		private int degree;
+		private int rotSpeed; //speed and direction of rotation
 	
 	/**
 	 * Constructor.

@@ -4,28 +4,32 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-public class Navigation {
-	
-	
-	private JFrame current;
-	private Menu m;
-	private Settings s;
-	private HowToPlay h;
-	private Pause p;
-	private Endscreen e; 
-	//private Menu screen;
-	private Renderer screen;
-	private Component showing;
-	private int numSen;
-	private int diff;
-	
-	//PUT THE MAZE AND PLAYER IN RENDERER
-	
-	private final int WWID = 1000;//window width and height
-	private final int WHEI = 800;
 
-	//pause timer
-	private boolean paused = false;
+/**
+ * This class is responsible for the window (JFrame) of the program, general JPanel management related to the window and variables passed between JPanels
+ *
+ */
+public class Navigation {
+	//class constants
+		private final int WWID = 1000;//window width and height
+		private final int WHEI = 800;
+		
+	//class variables
+		private Component showing;// keeps track of which component is being shown
+		private boolean paused = false;//pause timer
+		//JPanels inside Navigation
+			private JFrame current;
+			private Menu m;
+			private Settings s;
+			private HowToPlay h;
+			private Pause p;
+			private Endscreen e; 
+			private Renderer screen;
+			
+		//variables passed to this from settings.java -- these get passed to screen whenever a new renderer is made
+			private int numSen;
+			private int diff;
+
 	
 	public Navigation() throws IOException {
 		numSen = 3; //just some default starting variables 
@@ -33,31 +37,7 @@ public class Navigation {
 		startWindow();
 	}
 
-	public boolean isPaused() {
-		return paused;
-	}
-
-	public void setPaused(boolean paused) {
-		this.paused = paused;
-	}
-
-	public int getNumSen() {
-		return numSen;
-	}
-
-	public void setNumSen(int numSen) {
-		this.numSen = numSen;
-		showSettings();
-	}
-
-	public int getDiff() {
-		return diff;
-	}
-
-	public void setDiff(int diff) {
-		this.diff = diff;
-		showSettings();
-	}
+	
 
 	private void startWindow() throws IOException{
 		//display = new Display Menu();
@@ -103,6 +83,7 @@ public class Navigation {
 	public void showGame() {
 		screen = new Renderer(this,WWID,WHEI, numSen, diff);
 		screen.setVisible(true);
+		this.paused = false;
 		setCurrentFrame(screen);
 	}
 	
@@ -164,6 +145,7 @@ public class Navigation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.paused = true;
         e.setVisible(true);
 		setCurrentFrame(e);
 	}
@@ -198,6 +180,30 @@ public class Navigation {
 		return screen;
 	}
 
-	
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
+	public int getNumSen() {
+		return numSen;
+	}
+
+	public void setNumSen(int numSen) {
+		this.numSen = numSen;
+		showSettings();
+	}
+
+	public int getDiff() {
+		return diff;
+	}
+
+	public void setDiff(int diff) {
+		this.diff = diff;
+		showSettings();
+	}
 
 }

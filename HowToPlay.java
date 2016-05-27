@@ -13,10 +13,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+/**
+ * This class is responsible for the display of the instructions screen
+ *
+ */
+@SuppressWarnings("serial")
 public class HowToPlay extends JPanel {
+	
+	//class variables
 	private JButton menu;
 	private Navigation navigator;
 	
+	
+	/**
+	 * @param n Central navigation screen
+	 * @throws IOException
+	 */
 	public HowToPlay(Navigation n) throws IOException {
 		// Set navigator to the one passed in
 		navigator = n;
@@ -66,6 +78,13 @@ public class HowToPlay extends JPanel {
 			
 	}
 	
+	/**
+	 * Helper function to create image to be drawn on JFrame.
+	 * 
+	 * @param path Image file name
+	 * @return Image 
+	 * @throws IOException
+	 */
 	protected static ImageIcon createImage(String path) throws IOException {
 		java.net.URL imgURL = Menu.class.getResource(path);
 		if (imgURL != null) {
@@ -76,6 +95,9 @@ public class HowToPlay extends JPanel {
 		}
 	}
 	
+	/**
+	 * Overridden -- Draws the images onto the JFrame.
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);

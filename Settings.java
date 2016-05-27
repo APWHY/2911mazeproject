@@ -1,5 +1,3 @@
-// Templete Settings class
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,10 +14,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 
+/**
+ * This class is responsible for the display of the settings screen. Any changed settings are sent to the Renderer class via the Navigation class
+ *
+ */
+@SuppressWarnings("serial")
 public class Settings extends JPanel {
+	
+	//class variables
 	private JButton play;
 	private JButton menu;
 	private JButton easy;
@@ -42,7 +46,7 @@ public class Settings extends JPanel {
 		navigator = n;
 		
 		// Create buttons with icons in them + hover images
-        ArrayList<JButton> buttonArray = new ArrayList<JButton>();
+        ArrayList<JButton> buttonArray = new ArrayList<JButton>();//this is only to save me typing some lines of code later on --tom
 	        play = new JButton(createImage("playP.png"));
 	        play.setRolloverIcon(createImage("playA.png"));
 	        buttonArray.add(play);
@@ -236,7 +240,7 @@ public class Settings extends JPanel {
 	}
 	
 	/**
-	 * Draws the images onto the JFrame.
+	 * Overridden -- Draws the images onto the JFrame.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {

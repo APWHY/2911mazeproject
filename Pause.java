@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,10 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
+/**
+ * This class is responsible for the display of the pause screen, seen when the game is paused
+ *
+ */
 @SuppressWarnings("serial")
 public class Pause extends JPanel{
 	
+	//class variables
 	private JButton unpause;
 	private JButton reset;
 	private JButton menu;
@@ -135,7 +138,7 @@ public class Pause extends JPanel{
 	}
 	
 	/**
-	 * Draws the images onto the JFrame.
+	 * Overridden -- Draws the images onto the JFrame.
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
